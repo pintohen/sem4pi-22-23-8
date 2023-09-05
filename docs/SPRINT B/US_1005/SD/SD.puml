@@ -1,0 +1,132 @@
+@startuml
+actor Manager
+
+autonumber
+
+participant AddCourseTeacherUI <<presentation>>
+participant AddCourseTeacherController<<application>>
+participant CourseManagementService<<service>>
+participant Course<<course>>
+participant PersistenceContext<<persistence>>
+participant RepositoryFactory<<factory>>
+database CourseRepository <<repository>>
+database UserRepository <<repository>>
+
+activate Manager
+
+Manager -> AddCourseTeacherUI : Add a teacher to a course
+
+activate AddCourseTeacherUI
+
+AddCourseTeacherUI --> Manager : Asks for course's code
+
+deactivate AddCourseTeacherUI
+
+Manager -> AddCourseTeacherUI : Code
+
+activate AddCourseTeacherUI
+
+AddCourseTeacherUI -> AddCourseTeacherController : verifyCourse(code)
+
+activate AddCourseTeacherController
+
+AddCourseTeacherController -> PersistenceContext : repositories()
+
+activate PersistenceContext
+
+PersistenceContext -> AddCourseTeacherController : factory
+
+deactivate PersistenceContext
+
+AddCourseTeacherController -> RepositoryFactory : courses()
+
+activate RepositoryFactory
+
+RepositoryFactory -> AddCourseTeacherController : courses
+
+deactivate RepositoryFactory
+
+AddCourseTeacherController -> CourseRepository : findByCode(code)
+
+activate CourseRepository
+
+CourseRepository ->AddCourseTeacherController : course
+
+deactivate CourseRepository
+
+AddCourseTeacherController -> AddCourseTeacherUI : course
+
+deactivate AddCourseTeacherController
+
+AddCourseTeacherUI -> AddCourseTeacherController : getTeachersAvailable(course)
+
+activate AddCourseTeacherController
+
+AddCourseTeacherController -> CourseManagementService : getTeachersAvailable(course)
+
+activate CourseManagementService
+
+CourseManagementService -> Course : getTeachers()
+
+activate Course
+
+Course -> CourseManagementService : teachers
+
+deactivate Course
+
+CourseManagementService -> CourseManagementService : getTeachers()
+
+CourseManagementService -> UserRepository : findAll()
+
+activate UserRepository
+
+UserRepository -> CourseManagementService : users
+
+deactivate UserRepository
+
+CourseManagementService -> AddCourseTeacherController : teachersAvailable
+
+deactivate CourseManagementService
+
+AddCourseTeacherController -> AddCourseTeacherUI : teachersAvailable
+
+deactivate AddCourseTeacherController
+
+AddCourseTeacherUI --> Manager : Shows all the available \n teachers and asks for teacher's email
+
+deactivate AddCourseTeacherUI
+
+Manager -> AddCourseTeacherUI : EmailAddress
+
+activate AddCourseTeacherUI
+
+AddCourseTeacherUI -> AddCourseTeacherController : addTeacherToCourse(email, course)
+
+activate AddCourseTeacherController
+
+
+AddCourseTeacherController -> CourseManagementService : addTeacherToCourse(user, course)
+
+activate CourseManagementService
+
+CourseManagementService -> Course : addTeacher(user)
+
+activate Course
+
+Course -> CourseManagementService : success
+
+deactivate Course
+
+CourseManagementService -> AddCourseTeacherController : success
+
+deactivate CourseManagementService
+
+AddCourseTeacherController -> AddCourseTeacherUI : success
+
+deactivate AddCourseTeacherController
+
+AddCourseTeacherUI --> Manager : shows operation success
+
+deactivate AddCourseTeacherUI
+
+@enduml

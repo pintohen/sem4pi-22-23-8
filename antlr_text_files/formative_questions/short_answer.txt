@@ -1,0 +1,4 @@
+SAQUES "What is a rabbit?";
+SOL |animal|0.25|;
+SOL |mammal|0.50|;
+SOL |vertebrate|0.50|;

@@ -1,0 +1,43 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+class EnableUserUI <<presentation>>
+class ChangeUserStateController <<application>>
+class AuthorizationService <<service>>
+class UserManagementService <<service>>
+class AuthzRegistry <<util>>
+class "user:User" <<domain>>
+class PersistenceContext  <<persistence>>
+class RepositoryFactory  <<factory>>
+class UserRepository <<repository>>
+
+EnableUserUI --> ChangeUserStateController : theController
+ChangeUserStateController --> AuthorizationService: authz
+ChangeUserStateController --> UserManagementService: userSvc
+ChangeUserStateController ..> AuthzRegistry
+AuthzRegistry ..> AuthorizationService
+AuthzRegistry ..> UserManagementService
+UserManagementService --> PersistenceContext: persistence
+UserManagementService --> UserRepository: userRepository
+UserManagementService --> "user:User" : userToEnable
+PersistenceContext --> RepositoryFactory: factory
+RepositoryFactory --> UserRepository: userRepository
+
+EnableUserUI : doShow()
+ChangeUserStateController : enableUserByEmail(EmailAddress)
+AuthorizationService : ensureAuthenticatedUserHasAnyOf(Role...)
+UserManagementService : enableUser(EmailAddress)
+PersistenceContext : repositories()
+RepositoryFactory : users()
+"user:User" : enable()
+UserRepository : findUserByEmail(EmailAddress)
+UserRepository : save(User)
+AuthzRegistry : authorizationService()
+AuthzRegistry : userService()
+
+@enduml

@@ -1,0 +1,119 @@
+@startuml
+
+'left to right direction
+
+' use case related classes
+class AnswerEnrollmentRequestUI <<presentation>>{
+    doShow()
+}
+
+class AnswerEnrollmentRequestController <<application>>{
+    acceptRequest(EnrollmentRequest request)
+    rejectRequest(EnrollmentRequest request)
+    getPendingRequests()
+}
+
+'domain classes
+class EnrollmentRequest <<root>>{
+    create(User student, Course course)
+    accept()
+    decline()
+}
+
+class Course <<root>>{
+    state()
+}
+
+class User <<root>>{
+    role()
+}
+
+class UserSession {
+    authenticatedUser()
+}
+
+' enrollment request value objects
+enum RequestState <<value>> {
+    PENDING
+    ACCEPTED
+    DECLINED
+}
+
+class AnsweredDate <<value>> {
+}
+
+class RequestedDate <<value>> {
+}
+
+' repositories/persistence
+class PersistenceContext <<persistence>>{
+    repositories()
+}
+
+class RepositoryFactory <<factory>> {
+    courses()
+    enrollmentRequests()
+}
+
+class CourseRepository <<repository>>{
+    save(Course course)
+    findByCode(CourseCode courseCode)
+}
+
+class EnrollmentRequestRepository <<repository>> {
+    save(EnrollmentRequest request)
+    findPendingRequests()
+}
+
+' service
+class EnrollmentRequestManagementService <<service>> {
+    acceptRequest(EnrollmentRequest request)
+    rejectRequest(EnrollmentRequest request)
+}
+
+class AuthorizationService <<service>> {
+    session()
+}
+
+class AuthzRegistry <<util>> {
+    authorizationService()
+}
+
+
+EnrollmentRequest --* Course
+EnrollmentRequest --* User
+EnrollmentRequest --* RequestState
+EnrollmentRequest --* RequestedDate
+EnrollmentRequest --o AnsweredDate
+
+EnrollmentRequestRepository --> EnrollmentRequest : knows >
+
+AnswerEnrollmentRequestUI ..> AnswerEnrollmentRequestController
+
+AnswerEnrollmentRequestController ..> EnrollmentRequestManagementService
+AnswerEnrollmentRequestController ..> AuthzRegistry
+AnswerEnrollmentRequestController --> AuthorizationService
+AnswerEnrollmentRequestController --> EnrollmentRequestRepository
+
+EnrollmentRequestManagementService ..> PersistenceContext
+EnrollmentRequestManagementService --> EnrollmentRequestRepository
+EnrollmentRequestManagementService --> CourseRepository
+
+PersistenceContext ..> RepositoryFactory
+
+
+RepositoryFactory ..> EnrollmentRequestRepository
+RepositoryFactory ..> CourseRepository
+
+
+
+AuthzRegistry ..> AuthorizationService
+AuthorizationService --> UserSession
+UserSession --> User
+
+EnrollmentRequestManagementService ..> AuthzRegistry
+EnrollmentRequestManagementService --> AuthorizationService
+
+
+
+@enduml

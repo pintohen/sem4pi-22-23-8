@@ -1,0 +1,19 @@
+EXAM "Portuguese";
+EXAM_DESCRIPTION "This is a final exam";
+OPEN_DATE (16-09-2024 09:00);
+CLOSE_DATE (17-09-2024 18:00);
+FEEDBACK_TYPE ONSUB;
+GRADE_TYPE AFTER;
+
+SECTION "Portuguese knowledge";
+
+TFQUES "Is portuguese the best language?";
+SOL <True|0.25>;
+
+NQUES "How many letters are there in the portuguese alphabet?";
+SOL |26|0.65|;
+
+SECTION "Phrases";
+
+SAQUES "Translate the following phrase: 'I am a student'";
+SOL |Eu sou um estudante|0.75|;

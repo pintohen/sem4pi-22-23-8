@@ -1,0 +1,66 @@
+@startuml
+
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+class ScheduleClassUI <<presentation>> {
+    doShow()
+}
+class ScheduleClassController <<application>> {
+    scheduleClass(String, String, String, String, String)
+}
+
+class AuthorizationService <<service>> {
+    ensureAuthenticatedUserHasAnyOf(Role...)
+    session()
+}
+
+class UserSession {
+    authenticatedUser()
+}
+
+class CourseManagementService <<service>> {
+    scheduleNewClass(String, String, String, String, String)
+}
+
+class "class:Course" <<domain>> {
+    addClass(Class)
+}
+
+class ClassFactory <<factory>> {
+    createClass(String, String, String, String, User, Set<User>)
+}
+
+class "class:Class" <<domain>> {
+    Class(Title, DayOfWeek, Time, Teacher, Set<User> Students)
+}
+
+class PersistenceContext <<persistence>> {
+    repositories()
+}
+
+class RepositoryFactory <<factory>> {
+    courses()
+}
+
+class CourseRepository <<repository>> {
+    save(Class)
+}
+
+ScheduleClassUI --> ScheduleClassController : theController
+ScheduleClassController --> CourseManagementService : theService
+ScheduleClassController --> AuthorizationService : autzh
+AuthorizationService --> UserSession : session
+CourseManagementService -> ClassFactory : theFactory
+ClassFactory -> "class:Class"
+CourseManagementService --> PersistenceContext : persistence
+PersistenceContext --> RepositoryFactory : factory
+RepositoryFactory --> CourseRepository : repository
+CourseManagementService --> CourseRepository : repository
+"class:Course" --> "class:Class" : addClass
+"class:Course" -> User : teacher
+"class:Course" -> CourseRepository : save
+
+@enduml

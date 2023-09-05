@@ -1,0 +1,85 @@
+@startuml
+
+
+class AuthzRegistry <<Utility>> {
+}
+
+' Services
+class AuthenticationService <<service>> {
+    + authenticate()
+}
+
+class AuthorizationService <<service>> {
+    + ensureUserHasOneOfRoles()
+}
+
+class PasswordEncoder <<service>> {
+}
+
+class PasswordPolicy <<service>> {
+}
+
+class UserSession {
+}
+
+
+' User aggregate
+class User <<root>> {
+}
+
+class UserState <<value>> {
+}
+
+class ShortName <<value>> {
+}
+
+class FullName <<value>> {
+}
+
+class EmailAddress <<value>> {
+}
+
+class Password <<value>> {
+}
+
+class Role <<value>> {
+}
+
+
+
+' User value objects
+User --> ShortName
+User --> FullName
+User --> EmailAddress
+User --> Password
+User --> UserState
+User --> Role
+
+' What does authentication use?
+AuthenticationService ..> AuthorizationService
+AuthenticationService ..> EmailAddress
+AuthenticationService ..> Password
+AuthenticationService ..> UserState
+AuthenticationService ..> Role
+AuthenticationService ..> PasswordPolicy
+AuthenticationService ..> PasswordEncoder
+
+' What does authorization have?
+AuthorizationService --> UserSession
+
+' What does a user session have?
+UserSession --> User
+
+' What does a password use?
+' (Since it has business logic rules and can't be directly be persisted)
+Password ..> PasswordPolicy
+Password ..> PasswordEncoder
+
+AuthzRegistry --> AuthenticationService
+AuthzRegistry --> AuthorizationService
+
+
+
+
+
+@enduml

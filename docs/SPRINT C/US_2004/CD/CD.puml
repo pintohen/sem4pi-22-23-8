@@ -1,0 +1,76 @@
+@startuml
+
+class TakeExamUI <<presentation>>{
+}
+
+class EvaluateExamController <<application>>{
+    + evaluateExamFromFile(filePath, examTitle)
+}
+
+class ExamService <<service>>{
+    + evaluateExamFromFile(filePath, student, examTitle)
+}
+
+class AuthzRegistry <<utility>>{
+}
+
+class AuthorizationService <<service>>{
+    + ensureAuthenticatedUserHasAnyOf(actions)
+    + session()
+}
+
+class ExamRepository <<repository>>{
+    + save(exam)
+}
+
+class ExamTemplateRepository <<repository>>{
+    + findByTitle(title)
+}
+
+class CourseRepository <<repository>>{
+    + findByTitle(title)
+}
+
+class ExamEvaluator <<utility>>{
+    + evaluateFromFile(filePath, student, examTemplate)
+}
+
+class ExamTemplate <<domain>>{
+}
+
+class Exam <<domain>>{
+    - grade
+    - totalGrade
+}
+
+class User <<domain>>{
+}
+
+TakeExamUI ..> EvaluateExamController
+
+EvaluateExamController --> ExamService
+EvaluateExamController --> AuthorizationService
+EvaluateExamController ..> AuthzRegistry
+AuthzRegistry ..> AuthorizationService
+EvaluateExamController ..> ExamRepository
+EvaluateExamController ..> ExamTemplateRepository
+EvaluateExamController ..> CourseRepository
+
+ExamService ..> ExamEvaluator
+ExamService --> ExamRepository
+ExamService --> ExamTemplateRepository
+ExamService --> CourseRepository
+
+ExamRepository --> Exam
+Exam --* ExamTemplate
+Exam --* User
+
+ExamTemplateRepository --> ExamTemplate
+
+note top of TakeExamUI
+    Some domain logic was abstracted for the sake of diagram readability.
+    Mostly mentioning ExamTemplate details and User details.
+    Also ANTLR parsing logic was abstracted, since it includes a lot of details.
+end note
+
+@enduml

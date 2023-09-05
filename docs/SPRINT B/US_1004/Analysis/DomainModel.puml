@@ -1,0 +1,114 @@
+@startuml
+hide methods
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+skinparam class {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+skinparam packageStyle rectangle
+
+skinparam card {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+
+package "Course Aggregate" {
+    entity Course <<entity>><<root>>
+
+    'Course value objects
+    card Code <<Value Object>> {
+    }
+    card Name <<Value Object>>{
+    }
+    card State <<Value Object>>{
+    }
+    card Description <<Value Object>>{
+    }
+    card MaxStudents <<Value Object>>{
+    }
+    card MinStudents <<Value Object>>{
+    }
+    card Edition <<Value Object>>{
+    }
+
+    Course --> Name
+    Course --> State
+    Course --> Description
+    Course --> MaxStudents
+    Course --> MinStudents
+    Course --> Code
+    Course --> Edition
+
+    note right of State
+        Can be one of the following:
+            - Open
+            - Closed
+            - Enroll
+            - InProgress
+    end note
+
+    note right of Code
+        Each course has a unique code
+        Example: "JAVA-1"
+    end note
+
+    note left of Edition
+        Different editions of a course
+        are to be considered different
+        courses
+    end note
+
+    entity Class <<entity>>
+
+    card ClassDate <<Value Object>>{
+    }
+
+    card ClassDuration <<Value Object>>{
+    }
+
+    card ClassTitle <<Value Object>>{
+    }
+
+    card ClassType <<Value Object>>{
+    }
+
+        note right of ClassDate
+            A class is always a recurring weekly event.
+
+            It should be impossible to schedule classes that
+            are coincident with other classes of the same course.
+
+            The system should also warn if one of the participants
+            in the class (either a teacher or a student) has other classes
+            at the same time. Teachers can schedule extra classes.
+        end note
+
+        note right of ClassTitle
+            A class must have a unique title
+        end note
+
+    Class --> ClassDate
+    Class --> ClassDuration
+    Class --> ClassTitle
+    Class --> ClassType
+    Course --> "*" Class : contains
+
+    note right of ClassType
+        Can be one of the following:
+            - Recurring
+            - Extra
+    end note
+}
+
+@enduml

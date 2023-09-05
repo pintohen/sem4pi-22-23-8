@@ -1,0 +1,1 @@
+./build-no-tests.sh clean

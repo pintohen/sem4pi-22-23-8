@@ -1,0 +1,9 @@
+MQUES "Identify the type of these creatures: Ant; Cow; Dog; Sparrow;";
+OPT "Insect";
+OPT "Mammal";
+OPT "Mammal";
+OPT "Bird";
+SOL |Ant-Insect|0.25|;
+SOL |Cow-Mammal|0.25|;
+SOL |Dog-Mammal|0.25|;
+SOL |Bird-Sparrow|0.25|;

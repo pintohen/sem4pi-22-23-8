@@ -1,0 +1,450 @@
+@startuml
+hide methods
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+skinparam class {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+skinparam packageStyle rectangle
+
+skinparam card {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+package "User Aggregate" {
+    entity User <<entity>><<root>>
+
+'User value objects
+    card EmailAddress <<Value Object>>{
+    }
+    card Password <<Value Object>>{
+    }
+    card FullName <<Value Object>>{
+    }
+    card ShortName <<Value Object>>{
+    }
+    card UserState <<Value Object>>{
+    }
+    card MechanographicNumber <<Value Object>>{
+    }
+    card Acronym <<Value Object>> {
+    }
+    card BirthDate <<Value Object>> {
+    }
+    card TaxPayerNumber <<Value Object>> {
+    }
+    card Role <<Value Object>> {
+    }
+    note right of Role: Can be Teacher, Student or Manager
+
+    User --> EmailAddress
+    User --> Password
+    User --> FullName
+    User --> ShortName
+    User --> Role
+    User --> UserState
+    User --> MechanographicNumber
+    User --> Acronym
+    User --> BirthDate
+    User --> TaxPayerNumber
+
+    note left of Role
+        This is only used for purposes
+        of authorization
+    end note
+}
+
+package "Course Aggregate" {
+    entity Course <<entity>><<root>>
+
+    'Course value objects
+    card Code <<Value Object>> {
+    }
+    card Name <<Value Object>>{
+    }
+    card State <<Value Object>>{
+    }
+    card Description <<Value Object>>{
+    }
+    card MaxStudents <<Value Object>>{
+    }
+    card MinStudents <<Value Object>>{
+    }
+    card Edition <<Value Object>>{
+    }
+
+    Course --> Name
+    Course --> State
+    Course --> Description
+    Course --> MaxStudents
+    Course --> MinStudents
+    Course --> Code
+    Course --> Edition
+
+    note right of State
+        Can be one of the following:
+            - Open
+            - Closed
+            - Enroll
+            - InProgress
+    end note
+
+    note right of Code
+        Each course has a unique code
+        Example: "JAVA-1"
+    end note
+
+    note left of Edition
+        Different editions of a course
+        are to be considered different
+        courses
+    end note
+
+    entity Class <<entity>>
+
+    card ClassTime <<Value Object>>{
+    }
+
+    card ClassTitle <<Value Object>>{
+    }
+
+    card ClassDayOfWeek <<Value Object>>{
+    }
+
+        note right of ClassTitle
+            A class must have a unique title
+        end note
+
+    Class --> ClassTime
+    Class --> ClassTitle
+    Class --> ClassDayOfWeek
+    Course --> "*" Class : contains
+
+}
+
+package "EnrollmentRequest Aggregate" {
+    entity EnrollmentRequest <<entity>><<root>>
+
+    card RequestedDate <<Value Object>> {
+    }
+
+    card AnsweredDate <<Value Object>> {
+    }
+
+    card RequestState <<Value Object>>{
+    }
+
+    EnrollmentRequest --> RequestedDate
+    EnrollmentRequest --> AnsweredDate
+    EnrollmentRequest --> RequestState
+
+}
+
+package "Calendar Aggregate" {
+    entity Calendar <<entity>><<root>>
+}
+
+package "ExamTemplate Aggregate" {
+    entity ExamTemplate <<Entity>> <<root>> {
+    }
+
+    card Title <<Value Object>> {
+    }
+
+    card OpenDate <<Value Object>> {
+    }
+
+    card CloseDate <<Value Object>> {
+    }
+
+    card ExamDescription <<Value Object>> {
+    }
+
+    enum FeedbackType <<Enumeration>> {
+        None
+        On-Submission
+        After-Closing
+    }
+
+    enum GradeType <<Enumeration>> {
+        None
+        On-Submission
+        After-Closing
+    }
+
+    entity Section <<entity>> {
+    }
+
+    card SectionNumber <<Value Object>> {
+    }
+
+    card SectionDescription <<Value Object>> {
+    }
+
+    entity ExamTemplateQuestion <<entity>> {
+    }
+
+    card Solution <<Value Object>> {
+    }
+
+    card SolutionDescription <<Value Object>> {
+    }
+
+    card SolutionWeight <<Value Object>> {
+    }
+
+    card QuestionDescription <<Value Object>> {
+    }
+
+    card Answer <<Value Object>> {
+    }
+
+    enum QuestionType <<Value Object>> {
+        Matching
+        MultipleChoice
+        ShortAnswer
+        Numerical
+        MissingWords
+        TrueFalse
+        }
+
+    ExamTemplate --> Title
+    ExamTemplate --> OpenDate
+    ExamTemplate --> CloseDate
+    ExamTemplate --> Section
+    ExamTemplate --> FeedbackType
+    ExamTemplate --> GradeType
+    ExamTemplate --> ExamDescription
+
+    Section --> SectionDescription
+    Section --> ExamTemplateQuestion
+    Section --> SectionNumber
+
+    note right of SectionNumber
+        Its number will be auto-incremented
+    end note
+
+    ExamTemplateQuestion --> QuestionType
+    ExamTemplateQuestion --> QuestionDescription
+    ExamTemplateQuestion --> Answer
+    ExamTemplateQuestion --> Solution
+
+    Solution --> SolutionDescription
+    Solution --> SolutionWeight
+}
+
+
+package "ANTLR Service" {
+    card ANTLR {
+    }
+}
+
+' added
+package "FormativeQuestion Aggregate" {
+    entity TemplateFormativeQuestion <<entity>> <<root>> {
+    }
+
+    card Solution <<Value Object>> {
+    }
+
+    card SolutionDescription <<Value Object>> {
+    }
+
+    card SolutionWeight <<Value Object>> {
+    }
+
+    card QuestionDescription <<Value Object>> {
+    }
+
+    card Answer <<Value Object>> {
+    }
+
+    enum QuestionType <<Value Object>> {
+        Matching
+        MultipleChoice
+        ShortAnswer
+        Numerical
+        MissingWords
+        TrueFalse
+    }
+
+    TemplateFormativeQuestion --> Solution
+    TemplateFormativeQuestion --> QuestionType
+    TemplateFormativeQuestion --> QuestionDescription
+    TemplateFormativeQuestion --> Answer
+
+    Solution --> SolutionDescription
+    Solution --> SolutionWeight
+}
+' end added
+
+package "Exam Aggregate" {
+    entity Exam <<entity>> <<root>> {
+    }
+    card Grade <<Value Object>> {
+    }
+    card TotalGrade <<Value Object>> {
+    }
+
+    Exam --> TotalGrade
+    Exam --> Grade
+}
+
+package "Meeting Aggregate" {
+    entity Meeting <<entity>><<root>>
+
+    card MeetingDate <<value Object>>{
+    }
+    card MeetingDuration <<value Object>>{
+    }
+
+    entity Invite <<entity>>
+
+    card Response <<Value Object>>{
+        }
+
+    note right of Response
+        The user accepts or rejects an invitation.
+        The status of someone that did not answer should be "no answer" or "unknown".
+    end note
+
+    Invite --> Response
+
+    Meeting --> MeetingDate
+    Meeting --> MeetingDuration
+    Meeting --> Invite
+}
+
+package PostItAggregate {
+    entity PostIt <<entity>><<root>>
+    card PostItContent <<Value Object>>{
+    }
+
+    card PostItRow <<Value Object>>{
+    }
+    card PostItCol <<Value Object>>{
+    }
+    card PostItTimeStamp <<Value Object>>{
+    }
+    card PostItState <<Value Object>>{
+    }
+
+    note right of PostItState
+        0 - CREATED
+        1 - UPDATED
+        2 - MOVED
+        3 - DELETED
+    end note
+
+    PostItContent <-- PostIt
+    PostItRow <-- PostIt
+    PostItCol <-- PostIt
+    PostItTimeStamp <-- PostIt
+    PostItState <-- PostIt
+}
+
+package BoardAggregate {
+    entity SharedBoard <<entity>><<root>>
+    card BoardTitle <<Value Object>>{
+    }
+    card BoardNRow <<Value Object>>{
+    }
+    card BoardNCol <<Value Object>>{
+    }
+    card BoardState <<Value Object>>{
+    }
+    card EntryTitle <<Value Object>>{
+    }
+    card EntryNumber <<Value Object>>{
+    }
+
+    BoardTitle <-- SharedBoard
+    BoardNRow <-- SharedBoard
+    BoardNCol <-- SharedBoard
+    BoardState <-- SharedBoard
+
+    entity BoardEntry <<Entity>>{
+    }
+    card BoardRow <<Value Object>>{
+    }
+    card BoardCol <<Value Object>>{
+    }
+
+    BoardEntry <-- SharedBoard
+    BoardRow <-- BoardEntry
+    BoardCol <-- BoardEntry
+    EntryNumber <-- BoardEntry
+    EntryTitle <-- BoardEntry
+
+
+    entity BoardPermissions <<Entity>>
+    card AccessLevel <<Value Object>>{
+    }
+
+    BoardPermissions <-- SharedBoard
+    BoardPermissions --> User
+    BoardPermissions --> AccessLevel
+
+    class BoardCreateConfig <<Util>>
+
+    note left of BoardCreateConfig
+        This will be extracted from a config file,
+        the default value is
+        20 rows and 10 columns
+    end note
+
+    card BoardMaxRow <<Value Object>>{
+    }
+    card BoardMaxCol <<Value Object>>{
+    }
+
+    BoardCreateConfig --> BoardMaxRow
+    BoardCreateConfig --> BoardMaxCol
+}
+
+    Course --> "1" User : is owned
+    Course --> "N" User : has
+    Course --> "N" User : teaches
+
+    EnrollmentRequest --> "1" User : is of
+    EnrollmentRequest --> "1" Course : belongs to
+
+    Calendar --> "N" Course : keeps track of
+
+    User --> "1" Calendar : has
+
+    Class --> User : has participants
+    Class --> User : has teacher
+    ExamTemplate --> "1" User : has teacher
+    ExamTemplate --> "1" Course : belongs to
+    Course --> "N" ExamTemplate : has
+    Exam --> "1" ExamTemplate : is based on
+    Exam --> "1" User : is taken by
+
+    Calendar --> "N" Meeting : keeps track of
+    Invite --> User : references
+
+    PostIt --> "1" User :owner
+    SharedBoard --> "1" User :owner
+    PostIt --> "1" SharedBoard :belongs
+
+    TemplateFormativeQuestion -> "1" Course : is related to
+
+    ANTLR --> "N" TemplateFormativeQuestion : parses
+    ANTLR --> "N" ExamTemplate : parses
+    ANTLR --> "N" Exam : parses
+
+
+    PostIt --> PostIt : keeps history of
+@enduml

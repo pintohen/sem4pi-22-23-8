@@ -1,0 +1,105 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Student as student
+
+participant TakeExamUI as ui <<presentation>>
+participant EvaluateExamController as ctrl <<application>>
+
+participant AuthorizationService as authzSvc <<service>>
+participant Optional as opt <<library>>
+
+participant UserSession as userSession <<domain>>
+
+participant ExamService as svc <<service>>
+
+database ExamTemplateRepository as examTemplateRepo <<repository>>
+
+participant ExamEvaluator as evaluator <<utility>>
+
+database ExamRepository as examRepo <<repository>>
+
+student -> ui : wants to take exam
+activate ui
+
+ui -> ctrl: create()
+activate ctrl
+ctrl -> svc: create()
+deactivate ctrl
+
+note right: dependency injection was \nabstracted for diagram readability
+
+ui --> student : asks for exam title
+deactivate ui
+
+student -> ui : provides exam title
+activate ui
+
+ui --> student : asks for submission file path
+deactivate ui
+
+student -> ui : provides submission file path
+activate ui
+
+ui --> ctrl : evaluateExamFromFile(filePath, examTitle)
+activate ctrl
+
+ctrl -> authzSvc : ensureAuthenticatedUserHasAnyOf(CourseRoles.STUDENT)
+
+ctrl -> authzSvc : session()
+activate authzSvc
+
+authzSvc --> ctrl : sessionOptional
+deactivate authzSvc
+
+ctrl -> opt : orElseThrow()
+activate opt
+
+opt --> ctrl : session
+deactivate opt
+
+ctrl --> userSession : authenticatedUser()
+activate userSession
+
+userSession --> ctrl : user
+deactivate userSession
+
+ctrl -> svc : evaluateExamFromFile(filePath, loggedUser, ExamTitle.of(examTitle))
+activate svc
+
+svc -> examTemplateRepo : findByTitle(examTitle))
+activate examTemplateRepo
+
+examTemplateRepo --> svc : examTemplate
+deactivate examTemplateRepo
+
+svc -> evaluator : evaluateFromFile(filePath, student, examTemplate)
+activate evaluator
+
+ref over evaluator
+    ANTLR4 parser logic
+    (antlr4.svg)
+end ref
+
+evaluator --> svc : evaluatedExam
+deactivate evaluator
+
+svc -> examRepo : save(evaluatedExam)
+activate examRepo
+
+examRepo --> svc : exam
+deactivate examRepo
+
+svc --> ctrl : exam
+deactivate svc
+
+ctrl --> ui : exam
+deactivate ctrl
+
+ui --> student : displays calculated grade
+
+
+
+@enduml

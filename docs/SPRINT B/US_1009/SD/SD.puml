@@ -1,0 +1,170 @@
+@startuml
+autonumber
+
+actor Manager as manager
+
+participant AnswerEnrollmentRequestUI as ui
+
+participant AnswerEnrollmentRequestController as ctrl
+participant EnrollmentRequestManagementService as service
+
+participant EnrollmentRequest as request
+participant AnsweredDate as answeredDate
+participant Course as course
+
+database EnrollmentRequestRepository as repo
+database CourseRepository as courseRepo
+
+participant PersistenceContext as ctx
+participant RepositoryFactory as repoFactory
+
+participant AuthzRegistry as registry
+participant AuthorizationService as authz
+
+
+manager -> ui : wants to answer a request
+activate ui
+
+ui -> ctx : repositories()
+activate ctx
+ctx --> ui : repositoryFactory
+deactivate ctx
+
+ui -> repoFactory : enrollmentRequests()
+activate repoFactory
+repoFactory --> ui : enrollmentRequestRepo
+deactivate repoFactory
+
+ui -> registry : authorizationService()
+activate registry
+registry --> ui : authSvc
+deactivate registry
+
+ui -> ctrl : create(enrollmentRequestRepo, authSvc)
+activate ctrl
+
+ctrl -> ctx : repositories()
+activate ctx
+ctx --> ctrl : repositoryFactory
+deactivate ctx
+ctrl -> repoFactory : courses()
+activate repoFactory
+repoFactory --> ctrl : courseRepo
+deactivate repoFactory
+
+ctrl -> service : create(enrollmentRequestRepo, courseRepo)
+deactivate ctrl
+
+ui -> ctrl : getPendingRequests()
+activate ctrl
+
+ctrl -> authz : ensureAuthenticatedUserHasAnyOf(CourseRoles.MANAGER)
+
+ctrl -> repo : findPendingRequests()
+activate repo
+
+repo --> ctrl : requests
+deactivate repo
+
+ctrl --> ui : requests
+deactivate ctrl
+
+ui --> manager : shows all pending requests
+
+manager -> ui : selects a request
+
+ui --> manager : asks if he wants to accept or reject the request
+
+manager -> ui : answers
+
+alt request is accepted
+
+ui -> ctrl : acceptRequest(request)
+activate ctrl
+
+ctrl -> authz : ensureAuthenticatedUserHasAnyOf(CourseRoles.MANAGER)
+
+ctrl -> service : acceptRequest(request)
+activate service
+
+service -> request : accept()
+activate request
+
+request -> request : this.state = RequestState.ACCEPTED
+
+request -> answeredDate : init()
+activate answeredDate
+answeredDate --> request : date
+deactivate answeredDate
+
+request -> course : addStudent(this.student)
+activate course
+course --> request : course
+deactivate request
+deactivate course
+
+
+service -> repo : save(request)
+activate repo
+repo --> service : request
+deactivate repo
+
+service -> request : course()
+activate request
+request --> service : course
+deactivate request
+
+service -> courseRepo : save(course)
+activate courseRepo
+courseRepo --> service : course
+deactivate courseRepo
+
+service --> ctrl : request
+deactivate service
+
+ctrl --> ui : request
+deactivate ctrl
+
+ui --> manager : informs that request was accepted
+
+else request is rejected
+
+ui --> ctrl : rejectRequest(request)
+activate ctrl
+
+ctrl -> authz : ensureAuthenticatedUserHasAnyOf(CourseRoles.MANAGER)
+
+ctrl -> service : rejectRequest(request)
+activate service
+
+service -> request : reject()
+activate request
+
+request -> request : this.state = RequestState.REJECTED
+
+request -> answeredDate : init()
+activate answeredDate
+answeredDate --> request : date
+deactivate answeredDate
+deactivate request
+
+service -> repo : save(request)
+activate repo
+repo --> service : request
+deactivate repo
+
+service --> ctrl : request
+deactivate service
+
+ctrl --> ui : request
+deactivate ctrl
+
+ui --> manager : informs that request was rejected
+end alt
+
+
+
+
+
+
+@enduml

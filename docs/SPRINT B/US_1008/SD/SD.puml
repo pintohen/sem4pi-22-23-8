@@ -1,0 +1,141 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Student as student
+
+participant RequestEnrollmentUI as ui <<presentation>>
+
+participant RequestEnrollmentController as ctrl <<application>>
+
+participant EnrollmentRequestManagementService as svc <<service>>
+participant AuthzRegistry as registry <<util>>
+participant AuthorizationService as authz <<service>>
+participant UserSession as userSession
+
+participant PersistenceContext as ctx <<persistence>>
+participant RepositoryFactory as repoFactory <<factory>>
+
+database CourseRepository as courseRepo <<repository>>
+database EnrollmentRequestRepository as requestRepo <<repository>>
+participant EnrollmentRequest as enrollmentRequest <<entity>>
+
+participant CourseCode as courseCode <<value object>>
+participant Optional as opt <<util>>
+
+
+student -> ui: request enrollment
+activate ui
+ui --> student: asks for course code
+deactivate ui
+
+student -> ui: enter course code
+activate ui
+
+ui -> registry: authorizationService()
+activate registry
+registry --> ui: authzService
+deactivate registry
+ui -> ctrl: create(authzService)
+activate ctrl
+ctrl -> ctx: repositories()
+activate ctx
+ctx --> ctrl: repositoryFactory
+deactivate ctx
+ctrl -> repoFactory: courses()
+activate repoFactory
+repoFactory --> ctrl: courseRepo
+deactivate repoFactory
+
+ctrl -> repoFactory: enrollmentRequests()
+activate repoFactory
+repoFactory --> ctrl: enrollmentRequestRepo
+deactivate repoFactory
+
+ctrl -> svc: create(courseRepo, enrollmentRequestRepo)
+deactivate ctrl
+
+ui -> ctrl: createRequest(courseCode)
+activate ctrl
+
+ctrl -> authz: ensureAuthenticatedUserHasAnyOf(CourseRoles.STUDENT)
+ref over authz
+    Implementation of authorization
+end ref
+
+ctrl -> courseCode**: of(courseCodeString)
+activate courseCode
+courseCode --> ctrl: courseCode
+deactivate courseCode
+ctrl -> authz: session()
+activate authz
+authz --> ctrl: sessionOptional
+deactivate authz
+ctrl -> opt: orElseThrow()
+activate opt
+
+alt user is not logged
+    opt --> ui: throw new IllegalArgumentException("There is no user Logged.")
+    ui --> student: user is not logged
+else user is logged
+    opt --> ctrl: session
+    deactivate opt
+end alt
+
+ctrl -> userSession: authenticatedUser()
+activate userSession
+userSession --> ctrl: user
+deactivate userSession
+
+ctrl -> svc: createRequest(courseCode, user)
+activate svc
+
+svc -> courseRepo: findByCode(courseCode)
+activate courseRepo
+courseRepo --> svc: courseOptional
+deactivate courseRepo
+svc -> opt: orElseThrow()
+activate opt
+
+alt course does not exist
+    opt --> ui: throw new IllegalArgumentException("Course does not exist.")
+    ui --> student: no such course exists
+else course exists
+    opt --> svc: course
+    deactivate opt
+end alt
+
+svc -> requestRepo: findByCourseAndUser(course, user)
+activate requestRepo
+requestRepo --> svc: request
+deactivate requestRepo
+
+alt request != null
+    svc --> ui : throw new IllegalArgumentException("Request already exists.")
+    ui --> student: enrollment request already exists
+end alt
+
+svc -> enrollmentRequest**: create(student, course)
+activate enrollmentRequest
+enrollmentRequest --> svc: request
+deactivate enrollmentRequest
+
+svc -> requestRepo: save(request)
+activate requestRepo
+requestRepo --> svc: request(mirrored)
+deactivate requestRepo
+
+svc --> ctrl: request
+deactivate svc
+
+ctrl --> ui: request
+deactivate ctrl
+
+ui --> student: informs request was created with success
+deactivate ui
+
+
+
+
+@enduml

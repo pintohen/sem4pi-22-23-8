@@ -1,0 +1,24 @@
+EXAM "Mathematics";
+EXAM_DESCRIPTION "This is a final exam";
+OPEN_DATE (22-12-2025 09:00);
+CLOSE_DATE (22-12-2025 18:00);
+FEEDBACK_TYPE NONE;
+GRADE_TYPE NONE;
+
+SECTION "Math knowledge";
+
+TFQUES "Does PI start with 3.14?";
+SOL <True|0.25>;
+
+NQUES "What is the sum of the triangle angles?";
+SOL |180|0.65|;
+
+SECTION "Equation";
+
+NQUES "Find the value of x: 2x + 3 = 7";
+SOL |2|0.25|;
+
+SAQUES "How do you solve quadratic equations?";
+SOL |quadratic formula|0.75|;
+SOL |completing the square|0.75|;
+SOL |finding x|0.15|;

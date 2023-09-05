@@ -1,0 +1,77 @@
+@startuml
+autonumber
+
+actor "User" as usr
+
+participant xUI as ui <<presentation>>
+participant xController as ctrl <<application>>
+participant AuthzRegistry as reg <<util>>
+participant AuthorizationService as authz <<service>>
+participant Optional as opt
+participant UserSession as session
+participant User as userClass <<domain>>
+
+activate usr
+activate ui
+
+usr -> ui : want to perform use case
+ui -> ctrl** : creates
+ui -> ctrl : checkPermissions()
+deactivate ui
+activate ctrl
+ctrl -> reg : authorizationService()
+activate reg
+reg --> ctrl : authzService
+deactivate reg
+ctrl -> authz : ensureUserHasOneOfRoles(roles)
+deactivate ctrl
+activate authz
+authz -> authz : opt = session()
+authz -> opt : orElseThrow()
+activate opt
+
+alt user is logged
+    opt --> authz : session
+else user is not logged in
+    opt --> authz : throw new UnauthenticatedException()
+deactivate opt
+    authz --> ui : transports exception into UI
+activate ui
+    ui --> usr : informs insuccess of performing use case
+deactivate ui
+end alt
+
+authz -> session : authenticatedUser()
+activate session
+session --> authz : user
+deactivate session
+authz -> userClass : hasAnyOf(roles)
+activate userClass
+userClass --> authz : bool
+deactivate userClass
+
+deactivate session
+
+alt user role is not present in accepted roles
+    authz --> ctrl : throw new UnauthorizedException(user, roles)
+deactivate authz
+activate ctrl
+    ctrl --> ui : transports exception into UI
+activate ui
+deactivate ctrl
+    ui --> usr : informs that user doesn't\nhave access to \nthis use case
+end alt
+
+ui --> usr : asks data and \nis ready to perform\nuse case
+
+note right
+    do nothing since user is valid
+    UI has by default to accept users
+    only if user does not have permission
+    throw exception
+end note
+
+deactivate ui
+deactivate usr
+
+@enduml

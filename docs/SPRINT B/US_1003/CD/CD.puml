@@ -1,0 +1,59 @@
+@startuml
+
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+
+class ChangeStateUI <<presentation>>
+class ChangeStateController<<application>>
+class CourseManagementService<<service>>
+class Course<<course>>
+class PersistenceContext<<persistence>>
+class RepositoryFactory<<factory>>
+class CourseRepository <<repository>>
+
+class ChangeStateUI{
+show()
+}
+
+class ChangeStateController{
+verifyCourse(String courseCode)
+changeState(Course course)
+confirmForOpenClose(Course course)
+}
+
+class PersistenceContext{
+repositories()
+}
+
+class RepositoryFactory{
+courses()
+}
+
+class CourseRepository{
+findByCode(CourseCode code)
+}
+
+class Course{
+changeState(CourseState courseState)
+state()
+}
+
+class CourseManagementService{
+changeState(Course course)
+}
+
+ChangeStateUI -.-> ChangeStateController
+
+ChangeStateController --> PersistenceContext
+ChangeStateController --> RepositoryFactory
+ChangeStateController --> CourseManagementService
+
+RepositoryFactory --> CourseRepository
+
+CourseManagementService --> Course
+
+@enduml

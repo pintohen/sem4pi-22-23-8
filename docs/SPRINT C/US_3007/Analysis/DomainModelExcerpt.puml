@@ -1,0 +1,68 @@
+@startuml
+
+title Domain Model Excerpt
+
+hide methods
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+skinparam class {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+skinparam packageStyle rectangle
+
+skinparam card {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+package "User Aggregate" {
+    entity User <<entity>><<root>>
+}
+
+package BoardAggregate {
+    entity SharedBoard <<entity>><<root>>
+}
+
+package PostItAggregate {
+    entity PostIt <<entity>><<root>>
+    card PostItContent <<Value Object>>{
+    }
+
+    card PostItRow <<Value Object>>{
+    }
+    card PostItCol <<Value Object>>{
+    }
+    card PostItTimeStamp <<Value Object>>{
+    }
+    card PostItState <<Value Object>>{
+    }
+
+    note right of PostItState
+        0 - CREATED
+        1 - UPDATED
+        2 - MOVED
+        3 - DELETED
+    end note
+
+    PostItContent <-- PostIt
+    PostItRow <-- PostIt
+    PostItCol <-- PostIt
+    PostItTimeStamp <-- PostIt
+    PostItState <-- PostIt
+}
+
+PostIt --> "1" User :owner
+PostIt --> "1" SharedBoard :belongs
+PostIt --> PostIt : keeps history of
+
+@enduml

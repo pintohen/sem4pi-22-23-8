@@ -1,0 +1,157 @@
+@startuml
+hide methods
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+skinparam class {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+skinparam packageStyle rectangle
+
+skinparam card {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+package BoardAggregate {
+    entity SharedBoard <<entity>><<root>>
+    card BoardTitle <<Value Object>>{
+    }
+    card BoardNRow <<Value Object>>{
+    }
+    card BoardNCol <<Value Object>>{
+    }
+    card BoardState <<Value Object>>{
+    }
+    card EntryTitle <<Value Object>>{
+    }
+    card EntryNumber <<Value Object>>{
+    }
+
+    BoardTitle <-- SharedBoard
+    BoardNRow <-- SharedBoard
+    BoardNCol <-- SharedBoard
+    BoardState <-- SharedBoard
+
+    entity BoardEntry <<Entity>>{
+    }
+    card BoardRow <<Value Object>>{
+    }
+    card BoardCol <<Value Object>>{
+    }
+
+    BoardEntry <-- SharedBoard
+    BoardRow <-- BoardEntry
+    BoardCol <-- BoardEntry
+    EntryNumber <-- BoardEntry
+    EntryTitle <-- BoardEntry
+
+
+    entity BoardPermissions <<Entity>>
+    card AccessLevel <<Value Object>>{
+    }
+
+    class BoardCreateConfig <<Util>>
+
+    note left of BoardCreateConfig
+        This will be extracted from a config file,
+        the default value is
+        20 rows and 10 columns
+    end note
+
+    card BoardMaxRow <<Value Object>>{
+    }
+    card BoardMaxCol <<Value Object>>{
+    }
+
+    BoardCreateConfig --> BoardMaxRow
+    BoardCreateConfig --> BoardMaxCol
+}
+
+package "User Aggregate" {
+    entity User <<entity>><<root>>
+
+    card EmailAddress <<Value Object>>{
+    }
+    card Password <<Value Object>>{
+    }
+    card FullName <<Value Object>>{
+    }
+    card ShortName <<Value Object>>{
+    }
+    card UserState <<Value Object>>{
+    }
+    card MechanographicNumber <<Value Object>>{
+    }
+    card Acronym <<Value Object>> {
+    }
+    card BirthDate <<Value Object>> {
+    }
+    card TaxPayerNumber <<Value Object>> {
+    }
+    card Role <<Value Object>> {
+    }
+    note right of Role: Can be Teacher, Student or Manager
+
+    User --> EmailAddress
+    User --> Password
+    User --> FullName
+    User --> ShortName
+    User --> Role
+    User --> UserState
+    User --> MechanographicNumber
+    User --> Acronym
+    User --> BirthDate
+    User --> TaxPayerNumber
+
+    note left of Role
+        This is only used for purposes
+        of authorization
+    end note
+}
+
+package PostItAggregate {
+    entity PostIt <<entity>><<root>>
+    card PostItContent <<Value Object>>{
+    }
+
+    card PostItRow <<Value Object>>{
+    }
+    card PostItCol <<Value Object>>{
+    }
+    card PostItTimeStamp <<Value Object>>{
+    }
+    card PostItState <<Value Object>>{
+    }
+
+    note right of PostItState
+        0 - Deleted
+        1 - Active
+    end note
+
+    PostItContent <-- PostIt
+    PostItRow <-- PostIt
+    PostItCol <-- PostIt
+    PostItTimeStamp <-- PostIt
+    PostItState <-- PostIt
+}
+
+SharedBoard --> User :owner
+BoardPermissions <-- SharedBoard
+BoardPermissions --> User
+BoardPermissions --> AccessLevel
+PostIt --> "1" User :owner
+PostIt --> "1" SharedBoard :belongs
+
+
+
+@enduml

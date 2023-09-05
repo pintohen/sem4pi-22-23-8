@@ -1,0 +1,7 @@
+MCQUES "Choose all animals that have 4 paws";
+OPT "Ant";
+OPT "Cow";
+OPT "Dog";
+OPT "Sparrow";
+SOL |Cow|0.25|;
+SOL |Dog|0.25|;

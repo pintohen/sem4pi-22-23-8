@@ -1,0 +1,2 @@
+NQUES "How many paws does a dog have?";
+SOL |4|0.25|;

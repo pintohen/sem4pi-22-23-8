@@ -1,0 +1,127 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User as Actor
+participant CreateBoardUI as UI <<presentation>>
+participant CreateBoardController as Controller <<application>>
+participant BoardEntryFactory as BEFactory <<factory>>
+participant BoardEntry as BEDomain <<domain>>
+participant AuthorizationService as AuthzService <<service>>
+participant UserSession as US
+participant BoardService as Service <<service>>
+participant BoardFactory as BFactory <<factory>>
+participant BoardPermissionFactory as BPFactory <<factory>>
+participant BoardPermission as BPDomain <<domain>>
+participant Board as Domain <<domain>>
+participant PersistenceContext as Persistence <<persistence>>
+participant RepositoryFactory as Factory <<factory>>
+database BoardRepository as Repository <<repository>>
+
+
+Actor --> UI: Create Board
+activate UI
+    UI -> Controller: create()
+
+    UI --> Actor: Ask board information
+    Actor --> UI: BoardTitle, BoardNRow, BoardNCol
+
+        loop BoardNCol + (BoardNRow - 1) times 
+            UI --> Actor: Ask user EntryTitle
+                        note right: this is two different loops\none for for BoardNCol and\n another for BoardNRow
+                        
+            Actor --> UI: EntryTitle
+
+            UI -> Controller: createBoardEntry(entryNumber, boardRow,\nboardCol, entryTitle, boardNRow, boardNCol)
+            activate Controller
+            Controller -> BEFactory: createBoardEntry(entryNumber, boardRow,\nboardCol, entryTitle, boardNRow, boardNCol)
+            activate BEFactory
+            BEFactory -> BEDomain: BoardEntry(entryNumber, boardRow,\nboardCol, entryTitle)
+            activate BEDomain
+            BEDomain -> BEFactory: boardEntry
+            deactivate BEDomain
+            BEFactory -> Controller: boardEntry
+            deactivate BEFactory
+            Controller -> UI: boardEntry
+            deactivate Controller
+        end
+
+        
+    UI -> Controller: createBoard(boardTitle, boardNRow,\nboardNCol, allBoardEntrys)
+    activate Controller
+
+
+    Controller -> AuthzService: create()
+    Controller -> AuthzService: ensureAuthenticatedUserHasAnyOf(CourseRoles.allRoles())
+
+    AuthzService -> US: create()
+    activate AuthzService
+    Controller -> AuthzService: session()
+    AuthzService -> Controller: session
+    deactivate AuthzService
+    
+    Controller -> US: authenticatedUser()
+    activate US
+    US -> Controller: user
+    deactivate US
+
+    Controller -> Service: create()
+    activate Service
+    Controller -> Service: createBoard(boardTitle, boardNRow, boardNCol, allBoardEntrys, user)
+
+
+        Service -> Persistence: repositories()
+        activate Persistence
+        Persistence -> Factory: create()
+        Persistence -> Service: factory
+        deactivate Persistence
+
+        Service -> Factory: boards()
+        activate Factory
+        Factory -> Repository: create()
+        Factory -> Service: boardRepository
+        deactivate Factory
+
+        Service -> BFactory: create()
+        Service -> BFactory: create(boardTitle, boardNRow, boardNCol, allBoardEntrys, user)
+        activate BFactory
+
+        BFactory -> Domain: Board(boardTitle, boardNRow, boardNCol, allBoardEntrys, user)
+        activate Domain
+            Domain -> BFactory: board
+        deactivate Domain
+            BFactory -> Service: board
+        deactivate BFactory
+
+
+        Service -> BPFactory: create()
+        Service -> BPFactory: create(user, AccessLevelType.WRITE)
+        activate BPFactory
+        BPFactory -> BPDomain: BoardPermission(user, accesLevel)
+        activate BPDomain
+        BPDomain -> BPFactory: boardPermission
+        deactivate BPDomain
+        BPFactory -> Service: boardPermission
+        deactivate BPFactory
+
+        Service -> Domain: addPermission(boardPermission)
+
+
+        Service -> Repository:save(board)
+        activate Repository
+        Repository -> Service:board
+        deactivate Repository
+
+        Service -> Controller:board
+        deactivate Service
+        Controller -> UI:board
+        deactivate Controller
+
+        UI --> Actor: displayBoardCreated
+
+deactivate UI
+@enduml

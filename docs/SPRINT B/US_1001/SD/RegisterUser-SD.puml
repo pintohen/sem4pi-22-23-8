@@ -1,0 +1,102 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Manager as Actor
+participant RegisterUserUI as UI <<presentation>>
+participant AddUserController as Controller <<application>>
+participant AuthorizationService as AuthzService <<service>>
+participant UserManagementService as Service <<service>>
+participant UserBuilder as Builder <<builder>>
+participant "user:User" as Domain <<domain>>
+participant PersistenceContext as Persistence <<persistence>>
+participant RepositoryFactory as Factory <<factory>>
+database UserRepository as Repository <<repository>>
+
+
+Actor --> UI: Add User
+activate UI
+    UI -> Controller: create()
+    
+    UI --> Actor: Show List\nof Role Types
+    Actor --> UI: Role Type
+
+    UI --> Actor: Ask user information
+
+    Actor --> UI: ShortName, FullName,\nPassword,\nE-Mail, BirthDate, TaxPayerNumber
+
+
+    alt Role == CourseRoles.TEACHER
+        UI --> Actor: Ask Acronym
+        Actor --> UI: Acronym
+    end
+
+        
+    UI -> Controller: addUser(shortName, password, fullName,\n email, role, birthDate, taxPayerNumber, acronym)
+    activate Controller
+
+
+    Controller -> AuthzService: create()
+    activate AuthzService
+    Controller -> AuthzService: ensureAuthenticatedUserHasAnyOf(CourseRoles.MANAGER)
+    deactivate AuthzService
+
+    Controller -> Service: create()
+    activate Service
+    Controller -> Service: registerNewUser(shortName, password, fullName,\n email, role, birthDate, taxPayerNumber, acronym, createdOn);
+
+    Service -> Builder: create()
+        activate Builder
+        Service -> Builder: with(shortName, rawPassword, fullName,\n email, birthDate, role, taxPayerNumber)
+        Service -> Builder: createdOn(createdOn)
+        Service -> Builder: withAcronym(acronym)
+
+        alt Role == CourseRoles.STUDENT
+            Service -> Repository: findMaxYearMecanographicNumber()
+            activate Repository
+            Repository -> Service: mecNumber
+            deactivate Repository
+            Service -> Service: generateMecNumber()
+            Service -> Builder: withMecanographicNumber(mecNumber)
+        end
+
+        Service -> Builder: build()
+        Builder -> Domain: User(shortName, fullName, password, email,\n role, birthDate, numberMec, taxPayerNumber,\nacronym, createdOn);
+        activate Domain
+            Domain -> Domain: validateParameters(shortName, fullName, email,\n role, password, createdOnp)
+            Domain -> Domain: validateMecNumber(numberMec, role)
+            Domain -> Domain: validateAcronym(acronym, role)
+            Domain -> Builder: user
+        deactivate Domain
+            Builder -> Service: user
+        deactivate Builder
+
+        Service -> Persistence: repositories()
+        activate Persistence
+        Persistence -> Factory: create()
+        Persistence -> Service: factory
+        deactivate Persistence
+
+        Service -> Factory: users()
+        activate Factory
+        Factory -> Repository: create()
+        Factory -> Service: userRepository
+        deactivate Factory
+
+        Service -> Repository:save(user)
+        activate Repository
+        Repository -> Service:user
+        deactivate Repository
+
+        Service -> Controller:user
+        deactivate Service
+        Controller -> UI:user
+        deactivate Controller
+        UI --> Actor: displayUserCreated
+
+deactivate UI
+@enduml

@@ -1,0 +1,96 @@
+@startuml
+actor Manager
+
+autonumber
+
+participant ChangeStateUI <<presentation>>
+participant ChangeStateController<<application>>
+participant CourseManagementService<<service>>
+participant Course<<course>>
+participant PersistenceContext<<persistence>>
+participant RepositoryFactory<<factory>>
+database CourseRepository <<repository>>
+
+activate Manager
+
+Manager -> ChangeStateUI : Change the state of a course
+
+activate ChangeStateUI
+
+ChangeStateUI -> Manager : Asks for the course's code
+
+deactivate ChangeStateUI
+
+Manager -> ChangeStateUI : Code
+
+activate ChangeStateUI
+
+ChangeStateUI -> ChangeStateController : verifyCourse(code)
+
+activate ChangeStateController
+
+ChangeStateController -> PersistenceContext : repositories()
+
+activate PersistenceContext
+
+PersistenceContext -> ChangeStateController : factory
+
+deactivate PersistenceContext
+
+ChangeStateController -> RepositoryFactory : courses()
+
+activate RepositoryFactory
+
+RepositoryFactory -> ChangeStateController : courses
+
+deactivate RepositoryFactory
+
+ChangeStateController -> CourseRepository : findByCode(code)
+
+activate CourseRepository
+
+CourseRepository ->ChangeStateController : course
+
+deactivate CourseRepository
+
+ChangeStateController -> CourseManagementService : confirmForOpenClose(course)
+
+activate CourseManagementService
+
+CourseManagementService -> ChangeStateController : confirmation
+
+deactivate CourseManagementService
+
+ChangeStateController -> ChangeStateUI : course
+
+deactivate ChangeStateController
+
+ChangeStateUI -> Manager : Shows course information and asks \n if he wants to change its state
+
+deactivate ChangeStateUI
+
+Manager -> ChangeStateUI : Accepts
+
+activate ChangeStateUI
+
+ChangeStateUI -> ChangeStateController : changeCourseState(course)
+
+activate ChangeStateController
+
+ChangeStateController -> CourseManagementService : changeState(course)
+
+activate CourseManagementService
+
+CourseManagementService -> ChangeStateController : save(course)
+
+deactivate CourseManagementService
+
+ChangeStateController -> ChangeStateUI : success
+
+deactivate ChangeStateController
+
+ChangeStateUI -> Manager : success
+
+deactivate ChangeStateUI
+
+@enduml

@@ -1,0 +1,55 @@
+@startuml
+
+
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+class ListCourseGradesUI <<presentation>>
+
+class ListCourseExamGradesController<<application>>{
+getExams(User user, String courseCode)
+getTeacherCourses(User user)
+}
+
+class ExamService<<service>>{
+getTeacherCourses(User user)
+listTeacherGrades(Course course)
+}
+
+class Course<<course>>{
+teachers()
+}
+
+class PersistenceContext<<persistence>>{
+factories()
+}
+
+class RepositoryFactory<<factory>>{
+exams()
+courses()
+}
+
+class ExamRepository <<repository>>{
+findGradesByCourse(Course course)
+}
+
+class CourseRepository <<repository>>{
+findCoursesThatITeach(User user)
+}
+
+ListCourseGradesUI -.-> ListCourseExamGradesController
+
+ListCourseExamGradesController --> ExamService
+
+ExamService --> PersistenceContext
+ExamService --> RepositoryFactory
+ExamService --> Course
+
+RepositoryFactory --> CourseRepository
+RepositoryFactory --> ExamRepository
+
+
+@enduml

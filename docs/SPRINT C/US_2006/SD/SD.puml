@@ -1,0 +1,99 @@
+@startuml
+
+
+autonumber
+
+
+actor Teacher
+participant ListExamsTeacherUI <<presentation>>
+participant ListExamsTeacherController<<application>>
+participant ListExamsService<<service>>
+participant Course<<course>>
+participant PersistenceContext<<persistence>>
+participant RepositoryFactory<<factory>>
+database ExamRepository <<repository>>
+database CourseRepository <<repository>>
+
+activate Teacher
+
+Teacher -> ListExamsTeacherUI : List the exams
+
+activate ListExamsTeacherUI
+
+ListExamsTeacherUI -> ListExamsTeacherController : getTeacherCourses(teacher)
+
+activate ListExamsTeacherController
+
+ListExamsTeacherController -> ListExamsService : getTeacherCourses(teacher)
+
+activate ListExamsService
+
+ListExamsService -> PersistenceContext : factories()
+
+activate PersistenceContext
+
+PersistenceContext -> RepositoryFactory : get
+
+PersistenceContext -> ListExamsService : factory
+
+deactivate PersistenceContext
+
+ListExamsService -> RepositoryFactory : courses()
+
+activate RepositoryFactory
+
+RepositoryFactory -> CourseRepository : get
+
+RepositoryFactory -> ListExamsService : courses
+
+deactivate RepositoryFactory
+
+ListExamsService -> CourseRepository : findCoursesThatITeach(teacher)
+
+ListExamsService -> ListExamsTeacherController : courseList
+
+deactivate ListExamsService
+
+ListExamsTeacherController ->ListExamsTeacherUI : courseList
+
+deactivate ListExamsTeacherController
+
+ListExamsTeacherUI --> Teacher : asks which course code he wants
+
+deactivate ListExamsTeacherUI
+
+Teacher -> ListExamsTeacherUI : Code
+
+activate ListExamsTeacherUI
+
+ListExamsTeacherUI -> ListExamsTeacherController : getExams(user, code)
+
+activate ListExamsTeacherController
+
+ListExamsTeacherController -> ListExamsTeacherController : getTeacherCourses(user)
+
+ListExamsTeacherController -> ListExamsService : listTeacherGrades(code)
+
+activate ListExamsService
+
+ListExamsService -> ExamRepository : findGradesByCourse(course)
+
+activate ExamRepository
+
+ExamRepository ->ListExamsService : listTeacherExams
+
+deactivate ExamRepository
+
+ListExamsService -> ListExamsTeacherController : listTeacherExams
+
+deactivate ListExamsService
+
+ListExamsTeacherController -> ListExamsTeacherUI : listTeacherExams
+
+deactivate ListExamsTeacherController
+
+ListExamsTeacherUI --> Teacher : shows the list of students \n and corresponding grades
+
+deactivate ListExamsTeacherUI
+
+@enduml

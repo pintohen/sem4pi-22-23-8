@@ -1,0 +1,10 @@
+EXAM SUBMISSION "Portuguese" {
+    SECTION "Portuguese knowledge" {
+        TFQUES "Is portuguese the best language?" True;
+
+        NQUES "How many letters are there in the portuguese alphabet?" 25;
+    }
+    SECTION "Phrases" {
+        SAQUES "Translate the following phrase: 'I am a student'" ["Eu sou um estudante"];
+    }
+}

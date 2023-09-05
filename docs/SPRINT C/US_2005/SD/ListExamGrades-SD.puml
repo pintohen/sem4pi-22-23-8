@@ -1,0 +1,73 @@
+@startuml
+
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Student as Actor
+participant ListExamGradesUI as UI <<presentation>>
+participant ListExamGradesController as Controller <<application>>
+participant AuthenticationService as Autzh <<service>>
+participant UserSession as UserSession <<session>>
+participant ExamManagementService as Service <<service>>
+participant PersistenceContext as Context <<persistence>>
+participant RepositoryFactory as Factory <<factory>>
+database ExamsRepository as Repository <<repository>>
+
+Actor --> UI : list future exams
+
+activate UI
+UI -> Controller : create()
+
+UI -> Controller : listExamGrades()
+
+activate Controller
+Controller -> Autzh : create()
+Controller -> Autzh : ensureAuthenticatedUserHasAnyOf(CourseRoles.STUDENT)
+Autzh -> UserSession : create()
+
+activate Autzh
+Controller -> Autzh : session()
+Autzh -> Controller : session
+deactivate Autzh
+
+Controller -> UserSession : authenticatedUser()
+activate UserSession
+UserSession -> Controller : user
+deactivate UserSession
+
+Controller -> Service : create()
+Controller -> Service : listExamGrades()
+
+activate Service
+Service -> Context : repositories()
+
+activate Context
+Context -> Factory : create()
+Context -> Service : factory
+deactivate Context
+
+Service -> Factory : exams()
+
+activate Factory
+Factory -> Repository : create()
+Factory -> Service : examRepository
+deactivate Factory
+
+Service -> Repository : findGradesByStudentEmail()
+
+activate Repository
+Repository --> Service : examGrades
+
+deactivate Repository
+Service --> Controller : examGrades
+
+deactivate Service
+Controller --> UI : examGrades
+
+deactivate Controller
+UI -> Actor : show the operation result and print the results
+
+deactivate UI
+@enduml

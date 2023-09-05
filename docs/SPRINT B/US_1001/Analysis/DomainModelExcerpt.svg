@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="829px" preserveAspectRatio="none" style="width:767px;height:829px;background:#FFFFFF;" version="1.1" viewBox="0 0 767 829" width="767px" zoomAndPan="magnify"><defs/><g><rect fill="none" height="27.6094" id="_title" style="stroke:none;stroke-width:1.0;" width="168" x="292.5" y="5"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="158" x="297.5" y="24.5332">Domain Model Excerpt</text><!--MD5=[d51cf5418a28509a3866ac2d3c781727]
+cluster User Aggregate--><g id="cluster_User Aggregate"><rect fill="none" height="778" rx="2.5" ry="2.5" style="stroke:#000000;stroke-width:1.5;" width="754" x="7" y="45.6094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="110" x="329" y="62.1426">User Aggregate</text></g><!--MD5=[3fd616f346a44cd59a91eb10b19e157c]
+class User--><g id="elem_User"><rect codeLine="28" fill="#D8F5FF" height="65.7969" id="User" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="71" x="84.5" y="411.6094"/><ellipse cx="99.5" cy="440.5078" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M98.3594,441.3047 L98.3594,443.8047 L102.6875,443.8047 L102.6875,442.8828 Q102.6875,442.2734 102.9219,442.0078 Q103.1719,441.7422 103.5469,441.7422 Q103.9219,441.7422 104.1563,442.0078 Q104.3906,442.2734 104.3906,442.8828 L104.3906,445.5078 L96.3906,445.5078 Q95.7656,445.5078 95.5,445.2734 Q95.25,445.0391 95.25,444.6484 Q95.25,444.2734 95.5156,444.0391 Q95.7813,443.8047 96.3906,443.8047 L96.6563,443.8047 L96.6563,437.1484 L96.3906,437.1484 Q95.7656,437.1484 95.5,436.9141 Q95.25,436.6797 95.25,436.2891 Q95.25,435.9141 95.5,435.6797 Q95.7656,435.4453 96.3906,435.4453 L104.0156,435.4453 L104.0156,438.0391 Q104.0156,438.6484 103.7813,438.9141 Q103.5625,439.1641 103.1719,439.1641 Q102.7969,439.1641 102.5625,438.9141 Q102.3281,438.6484 102.3281,438.0391 L102.3281,437.1484 L98.3594,437.1484 L98.3594,439.6016 L99.8438,439.6016 Q99.8438,438.9453 99.9688,438.7578 Q100.2344,438.3516 100.7031,438.3516 Q101.0781,438.3516 101.3125,438.6172 Q101.5469,438.8672 101.5469,439.4766 L101.5469,441.4453 Q101.5469,441.9922 101.4219,442.1797 Q101.1563,442.5703 100.7031,442.5703 Q100.2344,442.5703 99.9688,442.1641 Q99.8438,441.9766 99.8438,441.3047 L98.3594,441.3047 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="43" x="111.5" y="429.0664">«entity»</text><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="35" x="115.5" y="444.1602">«root»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="29" x="118.5" y="461.3301">User</text><line style="stroke:#1E90FF;stroke-width:0.5;" x1="85.5" x2="154.5" y1="469.4063" y2="469.4063"/></g><g id="elem_GMN14"><path d="M511,773.6094 L511,799.9609 L745,799.9609 L745,783.6094 L735,773.6094 L511,773.6094 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><path d="M735,773.6094 L735,783.6094 L745,783.6094 L735,773.6094 " fill="#FEFFDD" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="213" x="517" y="792.1045">Can be Teacher, Student or Manager</text></g><g id="elem_GMN27"><path d="M23,764.1094 L23,806.8125 L217,806.8125 L217,774.1094 L207,764.1094 L23,764.1094 " fill="#FEFFDD" style="stroke:#181818;stroke-width:0.5;"/><path d="M207,764.1094 L207,774.1094 L217,774.1094 L207,764.1094 " fill="#FEFFDD" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="173" x="29" y="782.6045">This is only used for purposes</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="88" x="29" y="798.9561">of authorization</text></g><!--MD5=[3148c332aae5dcdd8320f93ca41946d3]
+entity EmailAddress--><g id="elem_EmailAddress"><rect fill="#D8F5FF" height="41.2188" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="117" x="305.5" y="690.1094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="97" x="315.5" y="707.6426">«Value Object»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="86" x="321" y="725.252">EmailAddress</text></g><!--MD5=[eccb22e7e361a8d7557906acb7543538]
+entity Password--><g id="elem_Password"><rect fill="#D8F5FF" height="41.2188" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="117" x="305.5" y="614.1094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="97" x="315.5" y="631.6426">«Value Object»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61" x="333.5" y="649.252">Password</text></g><!--MD5=[45e0721ea7c4721a06a6262f2a7270ec]
+entity FullName--><g id="elem_FullName"><rect fill="#D8F5FF" height="41.2188" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="117" x="305.5" y="538.1094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="97" x="315.5" y="555.6426">«Value Object»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="59" x="334.5" y="573.252">FullName</text></g><!--MD5=[11057b8babe0f9462d8c2fd43417bef2]
+entity ShortName--><g id="elem_ShortName"><rect fill="#D8F5FF" height="41.2188" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="117" x="305.5" y="462.1094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="97" x="315.5" y="479.6426">«Value Object»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70" x="329" y="497.252">ShortName</text></g><!--MD5=[3a8db0d5ab3e743ba06284eb159a16af]
+entity UserState--><g id="elem_UserState"><rect fill="#D8F5FF" height="41.2188" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="117" x="305.5" y="386.1094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="97" x="315.5" y="403.6426">«Value Object»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="62" x="333" y="421.252">UserState</text></g><!--MD5=[098e04cfe7ae2dee27cf84a7eda30a1c]
+entity MechanographicNumber--><g id="elem_MechanographicNumber"><rect fill="#D8F5FF" height="41.2188" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="174" x="277" y="310.1094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="97" x="315.5" y="327.6426">«Value Object»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="154" x="287" y="345.252">MechanographicNumber</text></g><!--MD5=[135e73c55691f8a008ea2424e2fe94b6]
+entity Acronym--><g id="elem_Acronym"><rect fill="#D8F5FF" height="41.2188" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="117" x="305.5" y="234.1094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="97" x="315.5" y="251.6426">«Value Object»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="55" x="336.5" y="269.252">Acronym</text></g><!--MD5=[061cb0205cc6b8c07fc603932c520ffb]
+entity BirthDate--><g id="elem_BirthDate"><rect fill="#D8F5FF" height="41.2188" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="117" x="305.5" y="158.1094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="97" x="315.5" y="175.6426">«Value Object»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="59" x="334.5" y="193.252">BirthDate</text></g><!--MD5=[550623bdcc736d0d45588110e7fa61f2]
+entity TaxPayerNumber--><g id="elem_TaxPayerNumber"><rect fill="#D8F5FF" height="41.2188" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="129" x="299.5" y="82.1094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="97" x="315.5" y="99.6426">«Value Object»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="109" x="309.5" y="117.252">TaxPayerNumber</text></g><!--MD5=[3dc034dc5d96b7274dd1363cb5d4aeca]
+entity Role--><g id="elem_Role"><rect fill="#D8F5FF" height="41.2188" rx="2.5" ry="2.5" style="stroke:#1E90FF;stroke-width:0.5;" width="117" x="305.5" y="766.1094"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="97" x="315.5" y="783.6426">«Value Object»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="29" x="349.5" y="801.252">Role</text></g><!--MD5=[43515af7809dc80bba981945304db8b5]
+link Role to GMN14--><g id="link_Role_GMN14"><path d="M422.82,786.6094 C448.74,786.6094 480.29,786.6094 510.76,786.6094 " fill="none" id="Role-GMN14" style="stroke:#1E90FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/></g><!--MD5=[dcf89634bb0ca0d1201fc39566d36f5b]
+link User to EmailAddress--><g id="link_User_EmailAddress"><path codeLine="54" d="M136.33,477.9694 C160.18,526.6294 210.42,617.2794 277,672.6094 C284.1,678.5094 292.25,683.6494 300.65,688.0894 " fill="none" id="User-to-EmailAddress" style="stroke:#1E90FF;stroke-width:1.0;"/><polygon fill="#1E90FF" points="305.34,690.4894,299.1374,682.839,300.8851,688.2191,295.505,689.9668,305.34,690.4894" style="stroke:#1E90FF;stroke-width:1.0;"/></g><!--MD5=[5ab1f46e477a8163e64d30b24bef4255]
+link User to Password--><g id="link_User_Password"><path codeLine="55" d="M148.66,477.7894 C177.86,511.1894 226.56,562.5194 277,596.6094 C285.25,602.1894 294.46,607.2594 303.69,611.7594 " fill="none" id="User-to-Password" style="stroke:#1E90FF;stroke-width:1.0;"/><polygon fill="#1E90FF" points="308.22,613.9194,301.8241,606.4299,303.7086,611.7636,298.3749,613.6481,308.22,613.9194" style="stroke:#1E90FF;stroke-width:1.0;"/></g><!--MD5=[176e07b16b38b5978b9bc82adf5db4ba]
+link User to FullName--><g id="link_User_FullName"><path codeLine="56" d="M155.52,461.8894 C187.01,477.5394 234.92,501.0694 277,520.6094 C287.88,525.6594 299.6,530.9494 310.79,535.9094 " fill="none" id="User-to-FullName" style="stroke:#1E90FF;stroke-width:1.0;"/><polygon fill="#1E90FF" points="315.54,538.0194,308.936,530.7127,310.9698,535.9913,305.6911,538.0251,315.54,538.0194" style="stroke:#1E90FF;stroke-width:1.0;"/></g><!--MD5=[2fbd8809877d07e1763fc513c669aea6]
+link User to ShortName--><g id="link_User_ShortName"><path codeLine="57" d="M155.67,450.0494 C193.38,455.9694 254.41,465.5594 300.52,472.7994 " fill="none" id="User-to-ShortName" style="stroke:#1E90FF;stroke-width:1.0;"/><polygon fill="#1E90FF" points="305.5,473.5794,297.2268,468.2357,300.5601,472.8062,295.9897,476.1395,305.5,473.5794" style="stroke:#1E90FF;stroke-width:1.0;"/></g><!--MD5=[70c37dc9bfbc8656942103c36f1181e4]
+link User to Role--><g id="link_User_Role"><path codeLine="58" d="M129.98,477.9294 C148.07,539.2094 194.38,670.6494 277,748.6094 C283.91,755.1294 292.13,760.6494 300.7,765.2894 " fill="none" id="User-to-Role" style="stroke:#1E90FF;stroke-width:1.0;"/><polygon fill="#1E90FF" points="305.49,767.7794,299.3559,760.074,301.0556,765.4695,295.6601,767.1691,305.49,767.7794" style="stroke:#1E90FF;stroke-width:1.0;"/></g><!--MD5=[0f85bf2d604b2ce2c1a4ef44fe10b7f9]
+link User to UserState--><g id="link_User_UserState"><path codeLine="59" d="M155.67,439.1694 C193.38,433.2494 254.41,423.6594 300.52,416.4194 " fill="none" id="User-to-UserState" style="stroke:#1E90FF;stroke-width:1.0;"/><polygon fill="#1E90FF" points="305.5,415.6394,295.9897,413.0792,300.5601,416.4126,297.2268,420.983,305.5,415.6394" style="stroke:#1E90FF;stroke-width:1.0;"/></g><!--MD5=[3ab4455f196eda7f6bc82a366e6bfbbd]
+link User to MechanographicNumber--><g id="link_User_MechanographicNumber"><path codeLine="60" d="M155.52,427.3294 C187.01,411.6794 234.92,388.1494 277,368.6094 C287.88,363.5594 299.6,358.2694 310.79,353.3094 " fill="none" id="User-to-MechanographicNumber" style="stroke:#1E90FF;stroke-width:1.0;"/><polygon fill="#1E90FF" points="315.54,351.1994,305.6911,351.1937,310.9698,353.2274,308.936,358.506,315.54,351.1994" style="stroke:#1E90FF;stroke-width:1.0;"/></g><!--MD5=[1f7b36e20815c018644a1c17c2d2d66f]
+link User to Acronym--><g id="link_User_Acronym"><path codeLine="61" d="M148.66,411.4294 C177.86,378.0294 226.56,326.6994 277,292.6094 C285.25,287.0294 294.46,281.9594 303.69,277.4594 " fill="none" id="User-to-Acronym" style="stroke:#1E90FF;stroke-width:1.0;"/><polygon fill="#1E90FF" points="308.22,275.2994,298.3749,275.5706,303.7086,277.4551,301.8241,282.7889,308.22,275.2994" style="stroke:#1E90FF;stroke-width:1.0;"/></g><!--MD5=[85a9a7abe549913901d608a8901c28fd]
+link User to BirthDate--><g id="link_User_BirthDate"><path codeLine="62" d="M136.33,411.2494 C160.18,362.5894 210.42,271.9394 277,216.6094 C284.1,210.7094 292.25,205.5694 300.65,201.1294 " fill="none" id="User-to-BirthDate" style="stroke:#1E90FF;stroke-width:1.0;"/><polygon fill="#1E90FF" points="305.34,198.7294,295.505,199.252,300.8851,200.9996,299.1374,206.3798,305.34,198.7294" style="stroke:#1E90FF;stroke-width:1.0;"/></g><!--MD5=[459e11d5a71364655287659c8b13223e]
+link User to TaxPayerNumber--><g id="link_User_TaxPayerNumber"><path codeLine="63" d="M129.98,411.2894 C148.07,350.0094 194.38,218.5694 277,140.6094 C283,134.9494 289.98,130.0494 297.32,125.8194 " fill="none" id="User-to-TaxPayerNumber" style="stroke:#1E90FF;stroke-width:1.0;"/><polygon fill="#1E90FF" points="301.93,123.2694,292.12,124.1435,297.5592,125.6976,296.0052,131.1368,301.93,123.2694" style="stroke:#1E90FF;stroke-width:1.0;"/></g><!--MD5=[61b5471d118decd77e1b5a1e36813ee8]
+link GMN27 to Role--><g id="link_GMN27_Role"><path d="M217.34,786.0094 C247.13,786.1294 279,786.2594 305.31,786.3694 " fill="none" id="GMN27-Role" style="stroke:#1E90FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/></g><!--MD5=[2942a9143185cb308ed18fd0065fbbee]
+@startuml
+
+title Domain Model Excerpt
+
+hide methods
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+skinparam class {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+skinparam packageStyle rectangle
+
+skinparam card {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+package "User Aggregate" {
+    entity User <<entity>><<root>>
+
+'User value objects
+    card EmailAddress <<Value Object>>{
+    }
+    card Password <<Value Object>>{
+    }
+    card FullName <<Value Object>>{
+    }
+    card ShortName <<Value Object>>{
+    }
+    card UserState <<Value Object>>{
+    }
+    card MechanographicNumber <<Value Object>>{
+    }
+    card Acronym <<Value Object>> {
+    }
+    card BirthDate <<Value Object>> {
+    }
+    card TaxPayerNumber <<Value Object>> {
+    }
+    card Role <<Value Object>> {
+    }
+
+    note right of Role: Can be Teacher, Student or Manager
+
+    User - -> EmailAddress
+    User - -> Password
+    User - -> FullName
+    User - -> ShortName
+    User - -> Role
+    User - -> UserState
+    User - -> MechanographicNumber
+    User - -> Acronym
+    User - -> BirthDate
+    User - -> TaxPayerNumber
+
+    note left of Role
+        This is only used for purposes
+        of authorization
+    end note
+}
+
+@enduml
+
+@startuml
+
+title Domain Model Excerpt
+
+hide methods
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+skinparam class {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+skinparam packageStyle rectangle
+
+skinparam card {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+package "User Aggregate" {
+    entity User <<entity>><<root>>
+
+    card EmailAddress <<Value Object>>{
+    }
+    card Password <<Value Object>>{
+    }
+    card FullName <<Value Object>>{
+    }
+    card ShortName <<Value Object>>{
+    }
+    card UserState <<Value Object>>{
+    }
+    card MechanographicNumber <<Value Object>>{
+    }
+    card Acronym <<Value Object>> {
+    }
+    card BirthDate <<Value Object>> {
+    }
+    card TaxPayerNumber <<Value Object>> {
+    }
+    card Role <<Value Object>> {
+    }
+
+    note right of Role: Can be Teacher, Student or Manager
+
+    User - -> EmailAddress
+    User - -> Password
+    User - -> FullName
+    User - -> ShortName
+    User - -> Role
+    User - -> UserState
+    User - -> MechanographicNumber
+    User - -> Acronym
+    User - -> BirthDate
+    User - -> TaxPayerNumber
+
+    note left of Role
+        This is only used for purposes
+        of authorization
+    end note
+}
+
+@enduml
+
+PlantUML version 1.2022.7(Mon Aug 22 18:01:30 BST 2022)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: Cp1252
+Language: pt
+Country: PT
+--></g></svg>

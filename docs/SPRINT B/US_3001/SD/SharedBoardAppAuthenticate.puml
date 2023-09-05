@@ -1,0 +1,44 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User as Actor
+participant MainMenuUI as UI <<presentation>>
+participant LoginUI as LogUI <<presentation>>
+participant SharedBoardAppController as Controller <<application>>
+participant MessageFormat as MF <<util>>
+
+Actor --> UI: Authenticate
+activate UI
+    UI -> Controller: create(sock)
+
+    UI -> LogUI: create(theController)
+    UI -> LogUI: doShow()
+    activate LogUI
+
+    LogUI -> Actor: ask email and password
+    Actor -> LogUI: Email, Password
+
+    Controller -> MF: create(sock)
+    activate Controller
+    LogUI -> Controller: authenticate(data)
+
+
+    Controller -> MF: sendMessage(VERSION, MessageCodes.AUTH, data)
+
+    Controller -> MF: readMessage()
+    activate MF
+    MF -> Controller: result
+    deactivate MF
+
+    Controller -> LogUI: result
+    LogUI -> Actor: displayAuthenticateSuccessfully
+    deactivate Controller
+
+deactivate LogUI
+deactivate UI
+@enduml

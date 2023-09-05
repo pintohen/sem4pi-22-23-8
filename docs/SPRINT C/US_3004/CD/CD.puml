@@ -1,0 +1,48 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+
+class HttpServerAjax <<http server>>
+class SessionManager{
+getUserByToken(String token)
+}
+class ShareBoardController <<application>>{
+shareBoard(long boardId,User user,User boardOwner,String accessLevel)
+}
+class BoardService <<service>>{
+addToBoard(Board board,User user,AccessLevel accessLevel)
+confirmLevel(AccessLevel accessLevel
+}
+class BoardRepository <<repository>>{
+save(Board board)
+findById(long boardId)
+}
+class UserRepository <<repository>>{
+findUserByEmail(EmailAddress emailAddress)
+}
+class Board <<domain>>{
+addPermission(BoardPermission permission)
+}
+class BoardPermFactory<<factory>>{
+create(User user, AccessLevel accessLevel)
+}
+class BoardPermission<<domain>>{
+changeAccess(AccessLevel accessLevel)
+}
+HttpServerAjax -.-> ShareBoardController
+
+ShareBoardController --> BoardService
+ShareBoardController --> BoardRepository
+ShareBoardController-->SessionManager
+ShareBoardController --> UserRepository
+
+BoardService --> BoardRepository
+BoardService --> Board
+
+
+@enduml

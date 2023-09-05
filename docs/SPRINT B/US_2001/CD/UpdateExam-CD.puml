@@ -1,0 +1,62 @@
+@startuml
+
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+left to right direction
+
+class UpdatExamUI <<presntation>> {
+    doShow()
+}
+
+class UpdateExamController <<application>> {
+    updateExam(String, String)
+}
+
+class ExamManagementService <<service>> {
+    updateExam(Title, String, User)
+}
+
+class AuthorizationService <<service>> {
+    ensureAuthenticatedUserHasAnyOf(Role...)
+    session()
+}
+
+class UserSession {
+    authenticatedUser()
+}
+
+
+class "class:ExamTemplate" <<domain>> {
+    ExamTemplate(ExamTitle, OpenDate, CloseDate, ExamDescription, FeedbackType, GradeType, Sections, Teacher, Students, Course)
+}
+
+class ExamBuilder <<build>> {
+    build()
+    with(ExamTitle, OpenDate, CloseDate, ExamDescription, FeedbackType, GradeType, Sections, Teacher, Students, Course)
+}
+
+
+class PersistenceContext <<persistence>> {
+    repositories()
+}
+
+
+class ExamRepository <<repository>> {
+    save(Exam)
+}
+
+UpdatExamUI -> UpdateExamController : theController
+UpdateExamController -> ExamManagementService : theService
+ExamManagementService -> AuthorizationService : autzh
+AuthorizationService -> UserSession : session
+ExamManagementService -> ExamBuilder : theBuilder
+ExamBuilder -> "class:ExamTemplate" : exam
+ExamManagementService --> PersistenceContext : persistence
+PersistenceContext --> RepositoryFactory : factory
+RepositoryFactory --> ExamRepository : repository
+ExamManagementService --> ExamRepository : repository
+
+@enduml

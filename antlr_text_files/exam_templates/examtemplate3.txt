@@ -1,0 +1,26 @@
+EXAM "Math 101 Final Exam";
+EXAM_DESCRIPTION "Final Exam for Math 101";
+OPEN_DATE (12-02-2024 11:00);
+CLOSE_DATE (14-02-2024 11:00);
+FEEDBACK_TYPE AFTER;
+GRADE_TYPE ONSUB;
+
+SECTION "Section 1";
+
+SWQUES "On a farm there are different types of animals. Namely the [OPT]. He serves to take care of the other [OPT]. No animal needs to move away from the [OPT].";
+SOL |dog|0.50|;
+SOL |animals|0.50|;
+SOL |place|0.50|;
+
+TFQUES "Does the dog have 4 paws?";
+SOL <True|1.00>;
+
+SECTION "Section 2";
+
+MCQUES "Choose all animals that have 4 paws";
+OPT "Ant";
+OPT "Cow";
+OPT "Dog";
+OPT "Sparrow";
+SOL |Cow|0.25|;
+SOL |Dog|0.25|;

@@ -1,0 +1,12 @@
+EXAM SUBMISSION "Mathematics" {
+    SECTION "Math knowledge" {
+        TFQUES "Does PI start with 3.14?" True;
+
+        NQUES "What is the sum of the triangle angles?" 180;
+    }
+    SECTION "Equation" {
+        NQUES "Find the value of x: 2x + 3 = 7" 2;
+
+        SAQUES "How do you solve quadratic equations?" ["quadratic formula"];
+    }
+}

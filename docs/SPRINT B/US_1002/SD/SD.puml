@@ -1,0 +1,119 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+
+actor Manager
+participant CreateCourseUI <<presentation>>
+participant CreateCourseController<<application>>
+participant CreateCourseService<<service>>
+participant Course<<course>>
+participant PersistenceContext<<persistence>>
+participant RepositoryFactory<<factory>>
+database UserRepository <<repository>>
+database CourseRepository <<repository>>
+
+activate Manager
+
+
+Manager -> CreateCourseUI: Add course
+
+activate CreateCourseUI
+
+CreateCourseUI --> Manager: asks for the course's information
+
+deactivate CreateCourseUI
+
+Manager -> CreateCourseUI : Edition, Code, Name, Description,\nMaximum, Minimum, UserEmail
+
+activate CreateCourseUI
+
+CreateCourseUI -> CreateCourseController: createCourse(edition, code, name,\n description, maximum, minimum, userEmail)
+
+activate CreateCourseController
+
+CreateCourseController -> CreateCourseService: create
+
+
+CreateCourseController -> PersistenceContext : repositories()
+
+activate PersistenceContext
+
+PersistenceContext -> RepositoryFactory : get
+
+PersistenceContext -> CreateCourseController : factory
+
+deactivate PersistenceContext
+
+CreateCourseController -> RepositoryFactory : users()
+
+activate RepositoryFactory
+
+RepositoryFactory -> UserRepository : get
+
+RepositoryFactory -> CreateCourseController : users
+
+deactivate RepositoryFactory
+
+CreateCourseController -> UserRepository : findUserByEmail(userEmail)
+
+activate UserRepository
+
+UserRepository -> CreateCourseController : user
+
+deactivate UserRepository
+
+CreateCourseController -> CreateCourseService: createCourse(edition, code, name, description,\nmaximum, minimum, user)
+
+activate CreateCourseService
+
+CreateCourseService -> Course : create(name, code, edition, description,\nmaximum, minimum, userEmail)
+
+activate Course
+
+Course -> Course : necessaryParameters(name, code,edition, maximum, headTeacher)
+
+Course -> Course : validateMaxMin(maximum, minimum)
+
+Course -> CreateCourseService : course
+
+deactivate Course
+
+CreateCourseService ->CreateCourseController : course
+
+deactivate CreateCourseService
+
+CreateCourseController -> PersistenceContext : repositories()
+
+activate PersistenceContext
+
+PersistenceContext -> RepositoryFactory : create
+
+PersistenceContext -> CreateCourseController : factory
+
+deactivate PersistenceContext
+
+CreateCourseController -> RepositoryFactory : courses()
+
+activate RepositoryFactory
+
+RepositoryFactory -> CourseRepository : create
+
+RepositoryFactory -> CreateCourseController : courseRepository
+
+deactivate RepositoryFactory
+
+CreateCourseController -> CourseRepository : save(course)
+
+CreateCourseController -> CreateCourseUI : course
+
+deactivate CreateCourseController
+
+CreateCourseUI --> Manager : shows operation's success
+
+deactivate CreateCourseUI
+
+deactivate Manager
+
+@enduml

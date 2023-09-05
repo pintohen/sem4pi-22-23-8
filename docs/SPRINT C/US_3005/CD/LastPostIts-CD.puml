@@ -1,0 +1,35 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+
+class HttpServerAjax <<http server>>
+class SessionManager
+class GetPostItsController <<application>>
+class BoardRepository <<repository>>
+class PostItRepository <<repository>>
+class User <<domain>>
+class Board <<domain>>
+
+HttpServerAjax --> GetPostItsController: theController
+HttpServerAjax --> SessionManager: sessionManager
+GetPostItsController --> BoardRepository: boardRepository
+GetPostItsController --> PostItRepository: postItRepository
+SessionManager ..> User
+BoardRepository --> Board
+PostItRepository ..> PostIt
+
+
+
+HttpServerAjax : getLastPostItsByBoard(String, String)
+SessionManager : getUserByToken(String)
+GetPostItsController : getLastPostItsByBoard(Long, User)
+BoardRepository : ofIdentity(Long)
+PostItRepository : lastPostItsOnBoard(Board)
+Board : userHasAnyPermission(User)
+
+@enduml

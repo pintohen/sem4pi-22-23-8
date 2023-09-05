@@ -1,0 +1,30 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+
+class HttpServerAjax <<http server>>
+class SessionManager
+class GetBoardsController <<application>>
+class BoardRepository <<repository>>
+class User <<domain>>
+class Board <<domain>>
+
+HttpServerAjax --> GetBoardsController: theController
+HttpServerAjax --> SessionManager: sessionManager
+GetBoardsController --> BoardRepository: boardRepository
+SessionManager ..> User
+BoardRepository ..> Board
+
+
+
+HttpServerAjax : getUserAccessBoards(String)
+SessionManager : getUserByToken(String)
+GetBoardsController : getBoardsByUser(User)
+BoardRepository : getBoardsByUser(User)
+
+@enduml

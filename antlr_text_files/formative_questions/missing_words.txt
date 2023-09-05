@@ -1,0 +1,4 @@
+SWQUES "On a farm there are different types of animals. Namely the [OPT]. He serves to take care of the other [OPT]. No animal needs to move away from the [OPT].";
+SOL |dog|0.50|;
+SOL |animals|0.50|;
+SOL |place|0.50|;

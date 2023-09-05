@@ -1,0 +1,10 @@
+EXAM SUBMISSION "Math 101 Final Exam" {
+    SECTION "Section 1" {
+        SWQUES "On a farm there are different types of animals. Namely the [OPT]. He serves to take care of the other [OPT]. No animal needs to move away from the [OPT]." ["dog","animals","place"];
+
+        TFQUES "Does the dog have 4 paws?" True;
+    }
+    SECTION "Section 2" {
+        MCQUES "Choose all animals that have 4 paws" ["Cow", "Dog"];
+    }
+}

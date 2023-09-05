@@ -1,0 +1,32 @@
+@startuml
+
+class ListCoursesUI{
+    -doShow()
+    -printCourses(Iterable<Course> coursesToPrint, String context)
+}
+
+class RetrieveCoursesController{
+    -getAllCourses()
+    -getCoursesThatITeach(User teacher)
+    -getCoursesThatILead(User teacher)
+    -getCoursesAvailableForStudent(User student)
+    -getCoursesTakenByStudent(User student)
+}
+
+class CourseRepository{
+    -findAll()
+    -findCoursesThatITeach(User teacher)
+    -findCoursesThatILead(User teacher)
+    -findCoursesTakenByStudent(User student)
+    -findOpenForEnrolment()
+}
+
+class Course{}
+
+ListCoursesUI ..> RetrieveCoursesController
+RetrieveCoursesController ..> CourseRepository
+
+CourseRepository --> Course : manages >
+RetrieveCoursesController ..> Course
+
+@enduml

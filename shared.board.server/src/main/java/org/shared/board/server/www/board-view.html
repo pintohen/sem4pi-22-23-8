@@ -1,0 +1,167 @@
+<html>
+    <head>
+        <title>eCourse - View Board</title>
+
+        <link rel="stylesheet" href="../css/style.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <meta name="referrer" content="no-referrer">
+
+        <link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../favicon/favicon-16x16.png">
+        <link rel="manifest" href="../favicon/site.webmanifest">
+        <link rel="mask-icon" href="../favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+
+        <script src="../index.js"></script>
+    </head>
+
+    <body onload="boardViewLoad()">
+        <div id="loader"></div>
+        <div id="overlay" onclick="disableOverlay()"></div>
+        <div id="main-container">
+            <h2 id="board-title" class="title center-content">Board Title</h2>
+            <div id="board-container">
+                <ul class="columns">
+
+                </ul>
+            </div>
+
+            <section id="boards-section">
+                <div class="container">
+                    <div id="all-boards-container">
+                        <h2 class="title center-content">Board Settings</h2>
+
+                        <div class="settings-board shadow">
+                            <a id="history-button" href="/history">
+                                <h3 class="title">History</h3>
+                            </a>
+                        </div>
+
+                        <div class="settings-board shadow">
+                            <a href="/myboards">
+                                <h3 class="title">Change Board</h3>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="share-board-section">
+                <div class="container">
+                    <div id="share-board-container">
+                        <h2 class="title center-content">Share Board</h2>
+
+                        <div id="share-board-components">
+                            <div class="title" id="text-and-input">
+                                <a id="email-text-field">
+                                    <h3 class="title">Email</h3>
+                                    <input type="email" id="email-share-board-input">
+                                </a>
+                                <div id="choose-permission-div">
+                                    <h3 class="title" id="permissions-text">Permission: </h3>
+                                    <select name="permissions" id="permissions">
+                                        <option>Read</option>
+                                        <option>Write</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button onclick="shareBoardData()" class="button add-button">Share</button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section id="create-post-it-section">
+                <div id="create-post-it-container" class="container">
+                    <div class="center-content min-width-container">
+                        <form id="create-post-it-form" class="boards-form">
+                            <h2 class="title">Post-It</h2>
+
+                            <div class="content-header">
+                                <h3 class="title">Content:</h3>
+                                <div class="inputWrapper">
+                                    <input id="file" class="fileInput" type="file" name="file1" accept="image/jpeg, image/png"/>
+                                </div>
+                            </div>
+
+                            <textarea id="post-it-content" maxlength="100"></textarea>
+
+                            <div class="buttons-form">
+                                <button id="undo-deleted-post-it" class="button add-button" onclick="undoPostIt()">
+                                    <span class="material-icons">undo</span>
+                                </button>
+
+                                <button class="button add-button" onclick="createPostIt()">Create</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section id="change-post-it-section">
+                <div id="change-post-it-container" class="container">
+                    <div class="center-content min-width-container">
+                        <form id="change-post-it-form" class="boards-form">
+                            <h2 class="title">Post-It</h2>
+
+                            <div class="content-header">
+                                <h3 class="title">Content:</h3>
+                                <div class="inputWrapper">
+                                    <input id="update-file" class="fileInput" type="file" name="file1" accept="image/jpeg, image/png"/>
+                                </div>
+                            </div>
+
+                            <textarea id="update-post-it-content" maxlength="100"></textarea>
+
+                            <div class="buttons-form">
+                                <button id="delete-post-it" class="button delete-button" onclick="deletePostIt()">
+                                    <span class="material-icons">delete</span>
+                                    <div>
+                                        Delete
+                                    </div>
+                                </button>
+
+                                <button id="undo-post-it" class="button add-button" onclick="undoPostIt()">
+                                    <span class="material-icons">undo</span>
+                                </button>
+
+                                <button class="button add-button" onclick="updatePostItContent()">Update</button>
+                            </div>
+
+                            <div class="line-gradient"></div>
+
+                            <div>
+                                <div class="move-to-another-cell">
+                                    <div>
+                                        <h3 class="title">Column:</h3>
+                                        <input id="move-to-column" type="text">
+                                    </div>
+
+                                    <div>
+                                        <h3 class="title">Row:</h3>
+                                        <input id="move-to-row" type="text">
+                                    </div>
+                                </div>
+
+                                <button class="button add-button" onclick="movePostIt()">Move</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <div id="container-notification">
+                <div id="rectangle-notification">
+                    <div class="notification-text">
+                        <i class="material-icons">info</i>
+                        <span id="notification-text"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

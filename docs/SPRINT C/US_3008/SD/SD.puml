@@ -1,0 +1,188 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor User as user
+
+participant HttpServerAjax as http <<http server>>
+
+participant UndoPostItController as ctrl <<application>>
+
+participant PostItService as service <<service>>
+
+participant SessionManager as session <<service>>
+
+participant Synchronizer as sync <<service>>
+
+database BoardRepository as boardRepo <<repository>>
+
+database PostItRepository as postItRepo <<repository>>
+
+participant PostIt as postIt <<domain>>
+
+participant PostItState as state <<domain>>
+
+participant PostItFactory as factory <<factory>>
+
+
+user --> http : wants to undo a post-it
+
+http --> user : waits for the post-it info
+
+user --> http : sends through http request body \nthe row, column, board and token
+
+activate http
+
+http -> ctrl : create()
+
+activate ctrl
+
+ctrl -> service : create()
+
+note right service
+    dependency injection was abstracted
+    for the sake
+    of diagram readability
+end note
+deactivate ctrl
+
+http -> session : getInstance()
+
+activate session
+
+session --> http : sessionManager()
+
+deactivate session
+
+http -> session : getUserByToken(token)
+
+activate session
+
+session --> http : authUser
+
+deactivate session
+
+http -> sync** : getInstance()
+
+
+http -> sync : generateLockKey(requestBody)
+
+activate sync
+
+sync --> http : lockKey
+
+deactivate sync
+
+http -> sync : getOrCreateLockObject(lockKey)
+
+activate sync
+
+sync --> http : lockObject
+
+deactivate sync
+
+note right http
+ the lockKey gets or creates an
+ object that will act as a mutex
+ when changing a post-it
+ (based on the row, column and boardId)
+end note
+
+http -> ctrl : undoPostIt(requestBody.row(), requestBody.column(), requestBody.boardId(), authUser)
+
+activate ctrl
+
+ctrl -> service : undoPostIt(row, column, Long.parseLong(boardId), authenticated)
+
+activate service
+
+service -> boardRepo : ofIdentity(boardId)
+
+activate boardRepo
+
+boardRepo --> service : board
+
+deactivate boardRepo
+
+service -> service : checkIfIsRowEntryTitle(row, board)
+
+service -> service : checkIfIsColumnEntryTitle(column, board)
+
+service -> service : postItByPosition(row, column, board, true)
+
+service -> postItRepo : positByPosition(row, column, board)
+activate postItRepo
+
+postItRepo --> service : lastPostIt
+
+deactivate postItRepo
+
+service -> postIt : rollbackPostIt()
+
+activate postIt
+
+postIt --> service : previousPostIt
+
+deactivate postIt
+
+service -> service : checkForUserOwnership(authUser, board, lastPostIt)
+
+alt previousState.equals(PostItStateType.DELETED)
+    service -> state : newState = PostItStateType.DELETED
+else
+    service -> state : newState = PostItStateType.UPDATED
+end alt
+
+service -> factory** : create()
+
+alt previousState.equals(PostItStateType.MOVED)
+    service -> service : savePreviousPostItMoved(lastPostIt, previousPostIt, postItFactory)
+
+    service -> factory : createChange(lastPostIt.content(), lastPostIt.rowPos(), lastPostIt.columnPos(), lastPostIt.owner(), lastPostIt.board(), PostItStateType.MOVED, null)
+
+    activate factory
+
+    factory --> service : movedPostIt
+
+    deactivate factory
+
+    service -> postItRepo : save(movedPostIt)
+
+    activate postItRepo
+
+    postItRepo --> service : lastPostIt = movedPostIt
+
+    deactivate postItRepo
+end alt
+
+service -> factory : createChange(previousPostIt.content(), previousPostIt.rowPos(), previousPostIt.columnPos(), previousPostIt.owner(), previousPostIt.board(), newState, lastPostIt)
+
+activate factory
+
+factory --> service : newPostIt
+
+deactivate factory
+
+service -> postItRepo : save(newPostIt)
+
+activate postItRepo
+
+postItRepo --> service : newPostIt
+
+deactivate postItRepo
+
+service --> ctrl : newPostIt
+
+deactivate service
+
+ctrl --> http : newPostIt
+
+deactivate ctrl
+
+http --> user : sends response and updates screen
+
+deactivate http
+
+
+@enduml

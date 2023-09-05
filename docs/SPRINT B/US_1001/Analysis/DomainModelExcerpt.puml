@@ -1,0 +1,72 @@
+@startuml
+
+title Domain Model Excerpt
+
+hide methods
+left to right direction
+
+skinparam classAttributeIconSize 0
+
+skinparam class {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+skinparam packageStyle rectangle
+
+skinparam card {
+    LifeLineBorderColor DodgerBlue
+    LifeLineBackgroundColor APPLICATION
+    BackgroundColor #D8F5FF
+    ArrowColor DodgerBlue
+    BorderColor DodgerBlue
+}
+
+package "User Aggregate" {
+    entity User <<entity>><<root>>
+
+'User value objects
+    card EmailAddress <<Value Object>>{
+    }
+    card Password <<Value Object>>{
+    }
+    card FullName <<Value Object>>{
+    }
+    card ShortName <<Value Object>>{
+    }
+    card UserState <<Value Object>>{
+    }
+    card MechanographicNumber <<Value Object>>{
+    }
+    card Acronym <<Value Object>> {
+    }
+    card BirthDate <<Value Object>> {
+    }
+    card TaxPayerNumber <<Value Object>> {
+    }
+    card Role <<Value Object>> {
+    }
+
+    note right of Role: Can be Teacher, Student or Manager
+
+    User --> EmailAddress
+    User --> Password
+    User --> FullName
+    User --> ShortName
+    User --> Role
+    User --> UserState
+    User --> MechanographicNumber
+    User --> Acronym
+    User --> BirthDate
+    User --> TaxPayerNumber
+
+    note left of Role
+        This is only used for purposes
+        of authorization
+    end note
+}
+
+@enduml

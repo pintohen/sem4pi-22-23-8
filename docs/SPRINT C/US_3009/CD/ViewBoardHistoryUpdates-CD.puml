@@ -1,0 +1,30 @@
+@startuml
+
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+class HttpServerAjax <<http server>>
+class ViewBoardHistoryController <<application>>
+class SessionManager
+class BoardRepository <<repository>>
+class PostItRepository <<repository>>
+class Board <<domain>>
+class User <<domain>>
+
+HttpServerAjax --> ViewBoardHistoryController : theController
+HttpServerAjax --> SessionManager : sessionManager
+SessionManager ..> User
+ViewBoardHistoryController --> BoardRepository : boardRepository
+ViewBoardHistoryController --> PostItRepository : postItRepository
+BoardRepository ..> Board
+
+HttpServerAjax : viewBoardHistory()
+SessionManager : getUserByToken()
+ViewBoardHistoryController : viewBoardHistory()
+Board : userHasPermission(User, AccessLevel)
+PostItRepository : getPostItsHistory(Board)
+BoardRepository : ofIdentity(long)
+
+@enduml

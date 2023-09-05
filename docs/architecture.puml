@@ -1,0 +1,51 @@
+@startuml
+title System Architecture
+
+package Console{
+    node "Student App" as StudentApp
+
+    node "Teacher App" as TeacherApp
+
+    node "Manager App" as ManagerApp
+
+    node "Shared Board App" as SharedBoard
+}
+
+package Web{
+    node "(AJAX) Board Viewer" as BoardViewer
+}
+
+package Server{
+    node "Server" as server
+}
+
+package Domain{
+    component Core as core
+}
+
+database "Database" as db
+
+StudentApp --> core : uses
+TeacherApp --> core : uses
+ManagerApp --> core : uses
+server --> core : uses
+
+BoardViewer ..> server : communicates through HTTP
+SharedBoard ..> server : communicates through TCP
+
+core --> db
+
+
+note right of core
+    Uses JPA to manage the database
+end note
+
+note left of db
+    We are using an
+    ISEP H2 docker,
+    however any other
+    database could be used
+end note
+
+
+@enduml

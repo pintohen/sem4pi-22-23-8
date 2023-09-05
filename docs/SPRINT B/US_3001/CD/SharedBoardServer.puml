@@ -1,0 +1,33 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+
+class TcpSrv <<thread>>
+class TcpSrvThread <<runnable>>
+class SharedBoardServerController <<application>>
+class SharedBoardServerService <<service>>
+class AuthenticationService <<service>>
+class MessageFormat
+class MessageCodes
+
+TcpSrv --> TcpSrvThread
+TcpSrvThread --> SharedBoardServerController: theController
+TcpSrvThread --> MessageFormat: mf
+SharedBoardServerController --> SharedBoardServerService: sbSvc
+SharedBoardServerService --> AuthenticationService: authService
+TcpSrvThread ..> MessageCodes
+SharedBoardServerService ..> MessageCodes
+
+TcpSrvThread : run()
+SharedBoardServerController : authenticate(Message)
+SharedBoardServerService : authenticateUser(String)
+AuthenticationService : authenticate(String, String, Role...)
+MessageFormat : sendMessage(int, int, String)
+MessageFormat : readMessage()
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor Student as Actor
+participant ListFutureExamsUI as UI <<presentation>>
+participant ListFutureExamsController as Controller
+participant AuthenticationService as Autzh <<service>>
+participant UserSession as UserSession <<session>>
+participant ExamManagementService as Service <<service>>
+participant PersistenceContext as Context <<persistence>>
+participant RepositoryFactory as Factory <<factory>>
+database ExamsRepository as Repository <<repository>>
+
+Actor --> UI : list future exams
+
+activate UI
+UI -> Controller : create()
+
+UI -> Controller : listFutureExams()
+
+activate Controller
+Controller -> Autzh : create()
+Controller -> Autzh : ensureAuthenticatedUserHasAnyOf(CourseRoles.STUDENT)
+Autzh -> UserSession : create()
+
+activate Autzh
+Controller -> Autzh : session()
+Autzh -> Controller : session
+deactivate Autzh
+
+Controller -> UserSession : authenticatedUser()
+activate UserSession
+UserSession -> Controller : user
+deactivate UserSession
+
+Controller -> Service : create()
+Controller -> Service : listFutureExams()
+
+activate Service
+Service -> Context : repositories()
+
+activate Context
+Context -> Factory : create()
+Context -> Service : factory
+deactivate Context
+
+Service -> Factory : exams()
+
+activate Factory
+Factory -> Repository : create()
+Factory -> Service : examRepository
+deactivate Factory
+
+Service -> Repository : findFutureExams()
+
+
+activate Repository
+Repository --> Service : futureExams
+
+deactivate Repository
+Service --> Controller : futureExams
+
+deactivate Service
+Controller --> UI : futureExams
+
+deactivate Controller
+UI -> Actor : show the operation result and print the results
+
+deactivate UI
+
+@enduml

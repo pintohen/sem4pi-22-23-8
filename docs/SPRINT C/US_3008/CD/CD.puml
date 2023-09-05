@@ -1,0 +1,71 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class HttpServerAjax <<http server>> {
+    + undoPostIt(requestBody, token)
+    - generateLockKey(requestBody)
+    - getOrCreateLockObject(lockKey)
+}
+
+class SessionManager <<service>> {
+    + getUserByToken(token)
+}
+
+class User <<domain>> {
+}
+
+class UndoPostItController <<application>> {
+    + undoPostIt(row, column, boardId, authUser)
+}
+
+class PostItService <<service>> {
+    + undoPostIt(row, column, boardId, authUser)
+    - checkIfIsRowEntryTitle(row, board)
+    - checkIfIsColumnEntryTitle(column, board)
+    - postItByPosition(row, column, board, isUndoBoolean)
+    - checkForUserOwnership(authUser, board, lastPostIt)
+    - savePreviousPostItMoved(lastPostIt, previousPostIt, postItFactory)
+}
+
+interface PostItRepository <<repository>> {
+    + save(postIt)
+    + positByPosition(row, column, board)
+}
+
+interface BoardRepository <<repository>> {
+    + ofIdentity(id)
+}
+
+class PostIt <<domain>> {
+    + rollbackPostIt()
+}
+
+class Board <<domain>> {
+    + userHasPermission(user, permission)
+}
+
+class PostItFactory <<factory>> {
+    {static} + createChange(content, row, column, owner, board, state, lastPostIt)
+}
+
+HttpServerAjax --> SessionManager
+HttpServerAjax --> UndoPostItController
+
+SessionManager ..> User
+
+UndoPostItController --> PostItService
+
+PostItService --> PostItRepository
+PostItService --> BoardRepository
+
+PostItService --> PostItFactory
+
+PostItRepository --> PostIt
+PostItFactory --> PostIt
+
+BoardRepository --> Board
+PostItService ..> Board
+
+PostItService --> PostIt
+
+@enduml

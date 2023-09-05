@@ -1,0 +1,55 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+
+class HttpServerAjax <<http server>>
+class CreatePostItController <<application>>
+class SessionManager
+class PostItService <<service>>
+class PostItFactory <<factory>>
+class PostItRepository <<repository>>
+class BoardRepository <<repository>>
+class PostIt <<domain>>
+class User <<domain>>
+class Board <<domain>>
+
+
+HttpServerAjax --> CreatePostItController: theController
+HttpServerAjax --> SessionManager: sessionManager
+SessionManager ..> User
+CreatePostItController --> PostItService: postItSvc
+PostItService --> PostItFactory: postItFactory
+PostItService --> PostItRepository: postItRepository
+PostItService --> BoardRepository: boardRepository
+PostItFactory --> PostIt
+PostItRepository --> PostIt
+BoardRepository --> Board
+PostItService --> PostIt: postIt
+PostItService --> Board: board
+
+
+
+HttpServerAjax : createPostIt(PostItBody, String)
+HttpServerAjax : generateLockKey(PostItBody)
+HttpServerAjax : getOrCreateLockObject(String)
+SessionManager : getUserByToken(String)
+CreatePostItController : createPostIt(String, String, String, String, User)
+PostItService : createPostIt(String, String, String, User, String)
+PostItService : checkIfIsRowEntryTitle(String, Board)
+PostItService : checkIfIsColumnEntryTitle(String, Board)
+PostItService : postItByPosition(String, String, Board, boolean)
+PostItService : isNumeric(String)
+PostItFactory : create(String, String, String, User, Board, PostItState)
+Board : userHasPermission(User, AccessLevel)
+PostItRepository : positByPosition(String, String, Board)
+PostItRepository : save(PostIt)
+BoardRepository : ofIdentity(Long)
+PostIt : PostIt(PostItContent, PostItRow, PostItColumn, User, Board, PostItState)
+
+
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User as Actor
+participant HttpServerAjax as Server <<http server>>
+participant SessionManager as SM
+participant GetBoardsController as Controller <<application>>
+database BoardRepository as Repository <<repository>>
+
+
+Actor --> Server: Show Boards that I have access
+activate Server
+    Server -> SM: create()
+    Server -> Controller: create()
+
+
+    Server -> SM: getUserByToken(token)
+    activate SM
+    SM -> Server: authUser
+    deactivate SM
+        
+    Server -> Controller: getBoardsByUser(authUser)
+    activate Controller
+    note right: dependency injection was abastracted\nfor diagram readability
+
+
+
+    Controller -> Repository: getBoardsByUser(authUser)
+    activate Repository
+    Repository -> Controller: boards
+    deactivate Repository
+
+    Controller -> Server: boards
+    deactivate Controller
+
+    Server --> Actor: displayAllBoardsUserHaveAccess
+
+deactivate Server
+@enduml

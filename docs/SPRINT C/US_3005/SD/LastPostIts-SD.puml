@@ -1,0 +1,60 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User as Actor
+participant HttpServerAjax as Server <<http server>>
+participant SessionManager as SM
+participant GetPostItsController as Controller <<application>>
+database BoardRepository as Repository <<repository>>
+participant Board as Domain <<domain>>
+database PostItRepository as PRepository <<repository>>
+
+
+Actor --> Server: Show Post-It's in board
+activate Server
+    Server -> SM: create()
+    Server -> Controller: create()
+
+    Server --> Actor: Ask board id
+    Actor --> Server: BoardId
+
+
+    Server -> SM: getUserByToken(token)
+    activate SM
+    SM -> Server: authUser
+    deactivate SM
+        
+    Server -> Controller: getLastPostItsByBoard(boardId, authUser)
+    activate Controller
+    note right: dependency injection was abastracted\nfor diagram readability
+
+
+    Controller -> Repository: ofIdentity(boardId)
+    activate Repository
+    Repository -> Controller: board
+    deactivate Repository
+
+    Controller -> Domain: userHasAnyPermission(authUser)
+    activate Domain
+        alt  user have access to that board
+            Domain -> Controller: true
+            deactivate Domain
+
+            Controller -> PRepository: lastPostItsOnBoard(board)
+            activate PRepository
+            PRepository -> Controller: postIts 
+            deactivate PRepository
+        end
+
+    Controller -> Server: postIts
+    deactivate Controller
+
+    Server --> Actor: displayPostIts
+
+deactivate Server
+@enduml

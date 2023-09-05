@@ -1,0 +1,2 @@
+TFQUES "Does the dog have 4 paws?";
+SOL <True|1.00>;

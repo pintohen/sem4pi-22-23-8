@@ -1,0 +1,55 @@
+@startuml
+
+
+autonumber
+
+
+participant XEntryPointApp as entry
+participant PersistenceContext as ctx <<factory>>
+participant RepositoryFactory as repoFactory <<factory>>
+participant AuthzRegistry as authzr <<util>>
+participant AuthorizationService as authz <<service>>
+participant AuthenticationService as auth <<service>>
+participant UserManagementService as userManSvc <<service>>
+database UserRepository as userRepo <<repository>>
+participant PasswordPolicy as passPolicy
+participant PasswordEncoder as passEncoder
+
+note right of entry
+    This is the main entry point of any
+    of our apps.
+end note
+
+
+activate entry
+entry -> ctx : repositories()
+activate ctx
+
+ctx --> entry : repositoryFactory
+deactivate ctx
+
+entry -> repoFactory : users()
+activate repoFactory
+note right of repoFactory : Can either create \nJPA or InMemory repositories\ndepending on what's in \nthe config file
+repoFactory --> userRepo** : create()
+
+repoFactory --> entry : userRepo
+deactivate repoFactory
+
+entry --> passPolicy** : create()
+entry --> passEncoder** : create()
+
+entry -> authzr : configure(userRepo, policy, encoder)
+deactivate entry
+
+activate authzr
+authzr --> authz** : create()
+
+authzr --> auth** : create(userRepo, authzService, policy, encoder)
+
+authzr --> userManSvc** : create(userRepo, policy, encoder)
+
+
+
+
+@enduml

@@ -1,0 +1,14 @@
+EXAM SUBMISSION "Mathematics" {
+    SECTION "Triangles" {
+        TFQUES "Does the triangle have 3 sides?" True;
+
+        NQUES "How many sides is a triangle composed of?" 3;
+
+        TFQUES "Is the sky blue?" null;
+    }
+    SECTION "Triangles" {
+        TFQUES "Does the triangle have 3 sides?" True;
+
+        NQUES "How many sides is a triangle composed of?" 3;
+    }
+}

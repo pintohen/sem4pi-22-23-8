@@ -1,0 +1,51 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant ExamEvaluator as evaluator <<utility>>
+
+participant ExamLexer as lexer <<utility>>
+participant CommonTokenStream as tokens <<utility>>
+participant ExamParser as parser <<utility>>
+
+participant ParseTreeWalker as walker <<utility>>
+
+participant ExamBuilder as builder <<domain>><<utility>>
+
+
+[o--> evaluator : evaluateFromFile (filePath, student, template)
+activate evaluator
+
+evaluator -> lexer : create(CharStreams.fromFileName(filePath))
+
+evaluator -> tokens : create(lexer)
+
+evaluator -> parser : create(tokens)
+
+evaluator -> parser : exam()
+activate parser
+
+parser --> evaluator : parseTree
+deactivate parser
+
+evaluator -> walker : create()
+
+evaluator -> builder : create()
+
+evaluator -> builder : withStudent(student)
+
+evaluator -> builder : withTemplate(template)
+
+evaluator -> walker : walk(builder, parseTree)
+
+evaluator -> builder : build()
+activate builder
+
+builder --> evaluator : exam
+deactivate builder
+
+<-- evaluator : exam
+
+
+@enduml

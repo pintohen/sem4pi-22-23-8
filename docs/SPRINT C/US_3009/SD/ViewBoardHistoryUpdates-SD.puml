@@ -1,0 +1,55 @@
+@startuml
+
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User as Actor
+participant HttpServerAjax as Server <<http server>>
+participant ViewBoardHistoryController as Controller <<application>>
+participant SessionManager as SM
+participant Board as Domain <<domain>>
+database BoardRepository as RepositoryB <<repository>>
+database PostItRepository as RepositoryP <<repository>>
+
+Actor -> Server: View the history of a board
+activate Server
+
+Server -> Controller: create()
+Server -> SM : create()
+Server -> Actor : onLoad after clicking on the previous page
+Actor -> Server : boardId
+Server -> SM : getUserByToken(token)
+activate SM
+
+SM -> Server : authUser
+deactivate SM
+
+Server -> Controller : viewBoardHistory(boardId, authUser)
+activate Controller
+
+Controller -> RepositoryB : ofIdentity(boardId)
+activate RepositoryB
+RepositoryB -> Board : userHasAccess(authUser)
+activate Board
+Board -> RepositoryB : board
+deactivate Board
+RepositoryB -> Controller : board
+deactivate RepositoryB
+
+Controller -> RepositoryP : getPostItsHistory(board)
+activate RepositoryP
+RepositoryP -> Controller : postIts
+deactivate RepositoryP
+
+Controller -> Server : postIts
+deactivate Controller
+
+Server -> Actor : postIts
+deactivate Server
+
+
+
+
+@enduml

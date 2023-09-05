@@ -1,0 +1,65 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant TcpSrv as Sys <<System>>
+participant TcpSrvThread as Thread <<application>>
+participant SharedBoardServerController as Controller <<application>>
+participant SharedBoardServerService as Service <<service>>
+participant AuthenticationService as AuthService <<service>>
+participant MessageFormat as MF <<util>>
+
+Sys -> Thread: create(cliSock)
+activate Sys
+Sys -> Thread: start()
+activate Thread
+
+    Thread -> Controller: create(SharedBoardServerService)
+    Thread -> MF: create(sock)
+    
+    loop message.code() != MessageCodes.DISCONN
+        Thread -> MF: readMessage()
+        activate MF
+        MF -> Thread: message
+
+        alt message.code() == MessageCodes.COMMTEST
+            Thread -> MF: sendMessage(VERSION, MessageCodes.ACK, "")
+        end
+
+
+        alt message.code() == MessageCodes.AUTH
+            Thread -> Controller: authenticate(message)
+            activate Controller
+            Controller -> Service: authenticateUser(result)
+            activate Service
+
+            Service -> AuthService: authenticate(email, password, CourseRoles.allRoles())
+            note right
+                authenticate method
+                is decribed in US_G006
+            end note
+            
+            activate AuthService
+            AuthService -> Service: session
+            deactivate AuthService
+
+            Service -> Controller: MessageCodes.ACK
+            deactivate Service
+
+            Controller -> Thread: result
+            deactivate Controller
+            Thread -> MF: sendMessage(VERSION, result, "")
+        end
+    end
+
+    Thread -> MF: sendMessage(VERSION, MessageCodes.ACK, "")
+    deactivate MF
+
+    Thread -> Sys: disconnected
+    deactivate Thread
+deactivate Sys
+@enduml

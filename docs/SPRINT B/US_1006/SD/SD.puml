@@ -1,0 +1,115 @@
+@startuml
+
+autonumber
+
+actor User as user
+
+participant ListCoursesUI as ui <<presentation>>
+participant RetrieveCoursesController as ctrl <<controller>>
+database CourseRepository as repo <<repository>>
+
+participant AuthzRegistry as registry <<utility>>
+participant AuthorizationService as authz <<service>>
+participant UserSession as session <<utility>>
+participant User as userEntity <<entity>>
+participant Role as role <<value>>
+
+participant Optional as opt <<utility>>
+
+
+user -> ui : wants to list available courses
+
+activate ui
+
+ui -> registry : authorizationService()
+activate registry
+
+registry --> ui : authzSvc
+deactivate registry
+
+ui -> authz : session()
+activate authz
+authz --> ui : optional
+deactivate authz
+
+ui -> opt : orElse(null)
+
+activate opt
+
+alt user is logged
+opt --> ui : session
+else user is not logged
+opt --> ui : null
+deactivate opt
+ui --> user : asks user to log in to use this feature
+end
+
+
+
+ui -> session : authenticatedUser()
+activate session
+session --> ui : userEntity
+deactivate session
+ui -> userEntity : role()
+activate userEntity
+userEntity --> ui : roleString
+deactivate userEntity
+
+alt roleString.equals(CourseRoles.MANAGER.toString())
+ui -> ctrl : getAllCourses()
+activate ctrl
+ctrl -> repo : findAll()
+activate repo
+repo --> ctrl : courses
+deactivate repo
+ctrl --> ui : courses
+deactivate ctrl
+else roleString.equals(CourseRoles.STUDENT.toString())
+ui -> ctrl : getCoursesTakenByStudent(student)
+activate ctrl
+ctrl -> repo : findCoursesTakenByStudent(student)
+activate repo
+repo --> ctrl : takenCourses
+deactivate repo
+ctrl --> ui : takenCourses
+deactivate ctrl
+ui -> ctrl : getCoursesAvailableForStudent(student)
+activate ctrl
+ctrl -> repo : findOpenForEnrollment()
+activate repo
+repo --> ctrl : courses
+deactivate repo
+ctrl -> ctrl : getCoursesTakenByStudent(student)
+ctrl -> repo : findCoursesTakenByStudent(student)
+activate repo
+repo --> ctrl : takenCourses
+deactivate repo
+ctrl -> ctrl : courses.removeAll(takenCourses)
+ctrl --> ui : courses
+deactivate ctrl
+else roleString.equals(CourseRoles.TEACHER.toString())
+ui -> ctrl : getCoursesThatILead(teacher)
+activate ctrl
+ctrl -> repo : findCoursesThatILead(teacher)
+activate repo
+repo --> ctrl : leadingCourses
+deactivate repo
+ctrl --> ui : leadingCourses
+deactivate ctrl
+ui -> ctrl : getCoursesThatITeach(teacher)
+activate ctrl
+ctrl -> repo : findCoursesThatITeach(teacher)
+activate repo
+repo --> ctrl : teachingCourses
+deactivate repo
+ctrl --> ui : teachingCourses
+deactivate ctrl
+end alt
+
+ui --> user : shows correspondent courses
+
+
+
+
+
+@enduml

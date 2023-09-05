@@ -1,0 +1,46 @@
+<-- Matching -->
+
+MQUES "Identify the type of these creatures: Ant; Cow; Dog; Sparrow;";
+OPT "Insect";
+OPT "Mammal";
+OPT "Mammal";
+OPT "Bird";
+SOL |Ant-Insect|0.25|;
+SOL |Cow-Mammal|0.25|;
+SOL |Dog-Mammal|0.25|;
+SOL |Bird-Sparrow|0.25|;
+
+<-- Multiple Choice -->
+
+MCQUES "Choose all animals that have 4 paws";
+OPT "Ant";
+OPT "Cow";
+OPT "Dog";
+OPT "Sparrow";
+SOL |Cow|0.25|;
+SOL |Dog|0.25|;
+
+<-- Short Answer -->
+
+SAQUES "What is a rabbit?";
+SOL |animal|0.25|;
+SOL |mammal|0.50|;
+SOL |vertebrate|0.50|;
+
+<-- Numerical -->
+
+NQUES "How many paws does a dog have?";
+SOL |4|0.25|;
+
+<-- Select Missing Words -->
+
+SWQUES "On a farm there are different types of animals. Namely the [OPT]. He serves to take care of the other [OPT]. No animal needs to move away from the [OPT].";
+SOL |dog|0.50|;
+SOL |animals|0.50|;
+SOL |place|0.50|;
+
+<-- True/False -->
+
+TFQUES "Does the dog have 4 paws?";
+SOL <True|1.00>;
+

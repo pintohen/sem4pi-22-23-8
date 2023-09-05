@@ -1,0 +1,103 @@
+@startuml
+'http://plantuml.com/skinparam.html
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User as Actor
+participant HttpServerAjax as Server <<http server>>
+participant UpdatePostItController as Controller <<application>>
+participant SessionManager as SM
+participant PostItService as Service <<service>>
+participant PostItFactory as PFactory <<factory>>
+participant PostIt as Domain <<domain>>
+database PostItRepository as Repository <<repository>>
+database BoardRepository as RepositoryB <<repository>>
+
+
+Actor --> Server: Change Post-It Position
+activate Server
+    Server -> Controller: create()
+    Server -> SM: create()
+
+    Server --> Actor: Ask post-it information
+    Actor --> Server: PreviousPostItRow, PreviousPostItColumn,\nNewPostItRow, NewPostItColumn BoardId
+
+
+    Server -> SM: getUserByToken(token)
+    activate SM
+    SM -> Server: authUser
+    deactivate SM
+        
+    Server -> Controller: updatePostItPosition(previousPostItRow, previousPostItColumn,\nnewPostItRow, newPostItColumn, boardId, authUser)
+    activate Controller
+
+
+    Controller -> Service: create()
+    note right: dependency injection was abastracted\nfor diagram readability
+
+    Controller -> Service: changePostItPosition(previousPostItRow, previousPostItColumn,\nnewPostItRow, newPostItColumn, boardId, authUser)
+    activate Service
+
+        Service -> RepositoryB: ofIdentity(boardId)
+        activate RepositoryB
+        RepositoryB -> Service: board
+        deactivate RepositoryB
+
+        Service -> Service: checkIfIsRowEntryTitle(previousPostItRow, board)
+        note right: check for previous post-it
+        Service -> Service: checkIfIsColumnEntryTitle(previousPostItColumn, board)
+        Service -> Service: postItByPosition(previousPostItRow, previousPostItColumn, board, false)
+        Service -> Service: checkForUserOwnership(authUser, board, lastPostIt)
+
+
+        Service -> Service: checkIfIsRowEntryTitle(newPostItRow, board)
+        note right: check for new post-it
+        Service -> Service: checkIfIsColumnEntryTitle(newPostItColumn, board)
+        Service -> Service: postItByPosition(newPostItRow, newPostItColumn, board, false)
+
+
+
+        Service -> PFactory: create()
+        Service -> PFactory: createChange(lastPostItContent, previousPostItRow, previousPostItColumn,\nauthUser, board, PostItStateType.MOVED, null)
+        activate PFactory
+
+        PFactory -> Domain: PostIt(postItContent, postItRow, postItColumn,\napostItOwner, board, postItState, lastPostIt)
+        activate Domain
+            Domain -> PFactory: lastPostItMoved
+        deactivate Domain
+            PFactory -> Service: lastPostItMoved
+        deactivate PFactory
+
+
+        Service -> Repository: save(lastPostItMoved)
+        activate Repository
+        Repository -> Service: lastPostItSaved
+        deactivate Repository
+
+        Service -> PFactory: createChange(lastPostItContent, newPostItRowp, newPostItColumnp,\nauthUser, board, PostItStateType.UPDATED, lastPostItSaved)
+        activate PFactory
+
+        PFactory -> Domain: PostIt(postItContent, postItRow, postItColumn,\napostItOwner, board, postItState, lastPostIt)
+        activate Domain
+            Domain -> PFactory: updatedPostIt
+        deactivate Domain
+            PFactory -> Service: updatedPostIt
+        deactivate PFactory
+
+        Service -> Repository: save(updatedPostIt)
+        activate Repository
+        Repository -> Service: updatedPostIt
+        deactivate Repository
+
+        Service -> Controller: updatedPostIt
+        deactivate Service
+        Controller -> Server: updatedPostIt
+        deactivate Controller
+
+        Server --> Actor: displayPostItUpdated
+
+deactivate Server
+@enduml

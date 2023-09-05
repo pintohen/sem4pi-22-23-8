@@ -1,0 +1,69 @@
+@startuml
+
+participant Teacher as Actor
+participant ListCourseExamsUI as UI <<presentation>>
+participant ListCourseExamsController as Controller
+participant AuthenticationService as Autzh <<service>>
+participant UserSession as UserSession <<session>>
+participant ExamManagementService as Service <<service>>
+participant PersistenceContext as Context <<persistence>>
+participant RepositoryFactory as Factory <<factory>>
+database ExamsRepository as Repository <<repository>>
+
+Actor --> UI : list future exams
+
+activate UI
+UI -> Controller : create()
+
+UI -> Controller : listCourseExams()
+
+activate Controller
+Controller -> Autzh : create()
+Controller -> Autzh : ensureAuthenticatedUserHasAnyOf(CourseRoles.TEACHER)
+Autzh -> UserSession : create()
+
+activate Autzh
+Controller -> Autzh : session()
+Autzh -> Controller : session
+deactivate Autzh
+
+Controller -> UserSession : authenticatedUser()
+activate UserSession
+UserSession -> Controller : user
+deactivate UserSession
+
+Controller -> Service : create()
+Controller -> Service : listCourseExams()
+
+activate Service
+Service -> Context : repositories()
+
+activate Context
+Context -> Factory : create()
+Context -> Service : factory
+deactivate Context
+
+Service -> Factory : exams()
+
+activate Factory
+Factory -> Repository : create()
+Factory -> Service : examRepository
+deactivate Factory
+
+Service -> Repository : listCourseExams = findByCourse()
+
+activate Repository
+Repository --> Service : listCourseExams
+
+deactivate Repository
+Service --> Controller : listCourseExams
+
+deactivate Service
+Controller --> UI : listCourseExams
+
+deactivate Controller
+UI -> Actor : show the operation result and print the results
+
+deactivate UI
+
+@enduml
