@@ -1,3 +1,19 @@
+# 4th Semester ISEP Integrative Project
+
+## In this repository you will find what my team and I have developed for the 4th semester *ISEP* Integrative Project.
+
+### The project was overall well loved by the teachers, as the results speak for themselves
+
+- LAPR4 grade - 19/20
+- SCOMP grade - 19/20
+- RCOMP grade - 20/20
+- EAPLI grade - 19/20
+- LPROG grade - 19/20
+
+>After the horizontal rule, you will find the original description of the project, as well as the original instructions on how to build, run and use the project
+
+---
+
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=10488123&assignment_repo_type=AssignmentRepo)
 # Project eCourse
 
@@ -42,8 +58,7 @@ If you want to run tests for all modules just run in command line:
 
 ## 5. How to Run
 
-Assuming the build was done, we can run the application through the files:
-
+Assuming the build was done, we can run the application through the fil
 
 eCourse - Manager
     
